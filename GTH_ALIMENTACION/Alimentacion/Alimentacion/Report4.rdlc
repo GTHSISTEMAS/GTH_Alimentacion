@@ -2714,7 +2714,6 @@
                                   <Value>=Fields!JAULAS.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2725,7 +2724,7 @@
                           </Paragraphs>
                           <rd:DefaultName>JAULAS</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!JAULAS.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!JAULAS.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -2789,7 +2788,6 @@
                                   <Value>=Fields!DESTETADAS1.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2800,7 +2798,7 @@
                           </Paragraphs>
                           <rd:DefaultName>DESTETADAS1</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!DESTETADAS1.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!DESTETADAS1.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -2864,7 +2862,6 @@
                                   <Value>=Fields!DESTETADAS2.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2875,7 +2872,7 @@
                           </Paragraphs>
                           <rd:DefaultName>DESTETADAS2</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!DESTETADAS2.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!DESTETADAS2.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -2939,7 +2936,6 @@
                                   <Value>=Fields!VAQUILLAS_PRENADAS.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2950,7 +2946,7 @@
                           </Paragraphs>
                           <rd:DefaultName>VAQUILLAS_PREÑADAS</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!VAQUILLAS_PRENADAS.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!VAQUILLAS_PRENADAS.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -3014,7 +3010,6 @@
                                   <Value>=Fields!TOTAL_KGS_CRIANZA.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3025,7 +3020,7 @@
                           </Paragraphs>
                           <rd:DefaultName>TOTAL_KGS_CRIANZA</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!TOTAL_KGS_CRIANZA.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!TOTAL_KGS_CRIANZA.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -3095,7 +3090,6 @@
                                   <Value>=Fields!PRODUCCION.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3106,7 +3100,7 @@
                           </Paragraphs>
                           <rd:DefaultName>PRODUCCION</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!PRODUCCION.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!PRODUCCION.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -3170,7 +3164,6 @@
                                   <Value>=Fields!SECAS.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3181,7 +3174,7 @@
                           </Paragraphs>
                           <rd:DefaultName>SECAS</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!SECAS.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!SECAS.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -3245,7 +3238,6 @@
                                   <Value>=Fields!TOTAL_KGS_GANADO.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>#,0</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3256,7 +3248,7 @@
                           </Paragraphs>
                           <rd:DefaultName>TOTAL_KGS_GANADO</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!TOTAL_KGS_GANADO.Value = 0,True,False)</Hidden>
+                            <Hidden>=IIF(Fields!TOTAL_KGS_GANADO.Value = "0",True,False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -3326,7 +3318,6 @@
                                   <Value>=Fields!TOTAL.Value</Value>
                                   <Style>
                                     <FontSize>5pt</FontSize>
-                                    <Format>=IIF(Fields!INGREDIENTE.Value = "PORCENTAJE DIFERENCIA CON TRACKER" OR Fields!INGREDIENTE.Value = "PORCENTAJE TOTAL DE DIFERENCIA CON TRACKER" , "#,0.00", "#,0" )</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3337,7 +3328,7 @@
                           </Paragraphs>
                           <rd:DefaultName>TOTAL</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIF(Fields!TOTAL.Value = 0, true, False)</Hidden>
+                            <Hidden>=IIF(Fields!TOTAL.Value = "0", true, False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>

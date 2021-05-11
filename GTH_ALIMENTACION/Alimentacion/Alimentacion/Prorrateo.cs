@@ -998,7 +998,7 @@ namespace Alimentacion
             {
                 cons = Convert.ToDouble(dt.Rows[i]["CONSUMO"]);
                 dt.Rows[i]["%P"] = sumBascula > 0 ? cons / sumBascula * 100 : 0;
-                sumP += sumBascula > 0 ? cons / sumBascula * 100 : 0;
+                //sumP += sumBascula > 0 ? cons / sumBascula * 100 : 0;
             }
 
             DataRow drT = dt.NewRow();
@@ -1485,7 +1485,7 @@ namespace Alimentacion
 
         private void SetTitulos()
         {
-            string formatof = fecha_SIE.ToString("dd") + " de " + fecha_SIE.ToString("MMMM") + " del " + fecha_SIE.ToString("yyyy") + " " + fecha_SIE.ToString("hh:mm tt");
+            string formatof = fecha_SIE.ToString("dd") + " de " + fecha_SIE.ToString("MMMM") + " del " + fecha_SIE.ToString("yyyy") + " 11:59 p. m." ;
             label3.Text = "Existencia de Alimento al Dia: " + formatof;
             label7.Text = "Existencia de Forraje al Dia: " + formatof;
             formatof = fecha_Tra.ToString("dd") + " de " + fecha_Tra.ToString("MMMM") + " del " + fecha_Tra.ToString("yyyy") + " " + fecha_Tra.ToString("HH:mm tt");
@@ -2712,36 +2712,39 @@ namespace Alimentacion
                 dt1.Columns.Add("EXISTENCIA").DataType = System.Type.GetType("System.String");
                 dt1.Columns.Add("DIFKG").DataType = System.Type.GetType("System.String");
                 dt1.Columns.Add("DIFPORC").DataType = System.Type.GetType("System.String");
-
-                for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                try
                 {
-                    DataRow dr = dt1.NewRow();
-                    dr["FECHA"] = dataGridView2[0, i].Value;
-                    dr["CLAVE"] = dataGridView2[1, i].Value;
-                    dr["ARTICULO"] = dataGridView2[2, i].Value;
-                    try { dr["EXISTENCIASIE"] = Convert.ToDouble(dataGridView2[3, i].Value).ToString("#,0.0"); }
-                    catch { }
-                    try { dr["INVFINAL"] = Convert.ToDouble(dataGridView2[4, i].Value).ToString("#,0.0"); }
-                    catch { }
-                    try { dr["BASCULA"] = Convert.ToDouble(dataGridView2[5, i].Value).ToString("#,0"); }
-                    catch { }
-                    try { sum_p += Convert.ToDouble(dataGridView2[6, i].Value); }
-                    catch { }
-                    try { dr["P"] = dr["ARTICULO"].ToString() == "TOTAL" ? sum_p.ToString("#,0.0") : Convert.ToDouble(dataGridView2[6, i].Value).ToString("#,0.0"); }
-                    catch { }
-                    try { sum_t += Convert.ToDouble(dataGridView2[7, i].Value); }
-                    catch { }
-                    try { dr["T"] = dr["ARTICULO"].ToString() == "TOTAL" ? sum_t.ToString("#,0.0") : Convert.ToDouble(dataGridView2[7, i].Value).ToString("#,0.0"); }
-                    catch { }
-                    try { dr["TRACKER"] = Convert.ToDouble(dataGridView2[8, i].Value).ToString("#,0"); }
-                    catch { }
-                    dr["EXISTENCIA"] = dataGridView2[2, i].Value != "TOTAL" ? dataGridView2[9, i].Value.ToString() == "X" ? "no" : "si" : "";
-                    try { dr["DIFKG"] = Convert.ToDouble(dataGridView2[10, i].Value).ToString("#,0.0"); }
-                    catch { }
-                    try { dr["DIFPORC"] = Convert.ToDouble(dataGridView2[11, i].Value).ToString("#,0.0"); }
-                    catch { }
-                    dt1.Rows.Add(dr);
+                    for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                    {
+                        DataRow dr = dt1.NewRow();
+                        dr["FECHA"] = dataGridView2[0, i].Value;
+                        dr["CLAVE"] = dataGridView2[1, i].Value;
+                        dr["ARTICULO"] = dataGridView2[2, i].Value;
+                        try { dr["EXISTENCIASIE"] = Convert.ToDouble(dataGridView2[3, i].Value).ToString("#,0.0"); }
+                        catch { }
+                        try { dr["INVFINAL"] = Convert.ToDouble(dataGridView2[4, i].Value).ToString("#,0.0"); }
+                        catch { }
+                        try { dr["BASCULA"] = Convert.ToDouble(dataGridView2[5, i].Value).ToString("#,0"); }
+                        catch { }
+                        try { sum_p += Convert.ToDouble(dataGridView2[6, i-1].Value); }
+                        catch { }
+                        try { dr["P"] = dr["ARTICULO"].ToString() == "TOTAL" ? sum_p.ToString("#,0.0") : Convert.ToDouble(dataGridView2[6, i].Value).ToString("#,0.0"); }
+                        catch { }
+                        try { sum_t += Convert.ToDouble(dataGridView2[7, i-1].Value); }
+                        catch { }
+                        try { dr["T"] = dr["ARTICULO"].ToString() == "TOTAL" ? sum_t.ToString("#,0.0") : Convert.ToDouble(dataGridView2[7, i].Value).ToString("#,0.0"); }
+                        catch { }
+                        try { dr["TRACKER"] = Convert.ToDouble(dataGridView2[8, i].Value).ToString("#,0"); }
+                        catch { }
+                        dr["EXISTENCIA"] = dataGridView2[2, i].Value.ToString() != "TOTAL" ? dataGridView2[9, i].Value.ToString() == "✔" ? "si" : "no" : "";
+                        try { dr["DIFKG"] = Convert.ToDouble(dataGridView2[10, i].Value).ToString("#,0.0"); }
+                        catch { }
+                        try { dr["DIFPORC"] = Convert.ToDouble(dataGridView2[11, i].Value).ToString("#,0.0"); }
+                        catch { }
+                        dt1.Rows.Add(dr);
+                    }
                 }
+                catch { }
             }
             else if (dataGridView2.Columns.Count == 13)
             {
@@ -2913,11 +2916,11 @@ namespace Alimentacion
 
                 try { dr["CONSUMO"] = Convert.ToDouble(dataGridView1[6, i].Value).ToString("#,0.0"); }
                 catch { }
-                try { sum_p += Convert.ToDouble(dataGridView1[7, i].Value); }
+                try { sum_p += Convert.ToDouble(dataGridView1[7, i-1].Value); }
                 catch { }
                 try { dr["P"] = dr["ARTICULO"].ToString() == "TOTAL" ? sum_p.ToString("#,0.0") : Convert.ToDouble(dataGridView1[7, i].Value).ToString("#,0.0"); }
                 catch { }
-                try { sum_t += Convert.ToDouble(dataGridView1[8, i].Value); }
+                try { sum_t += Convert.ToDouble(dataGridView1[8, i-1].Value); }
                 catch { }
                 try { dr["T"] = dr["ARTICULO"].ToString() == "TOTAL" ? sum_t.ToString("#,0.0") : Convert.ToDouble(dataGridView1[8, i].Value).ToString("#,0.0"); }
                 catch { }
@@ -3542,7 +3545,10 @@ namespace Alimentacion
             dgv.AllowUserToResizeRows = false;
             //dgv.AllowUserToResizeColumns = false;
             dgv.AllowUserToOrderColumns = false;
-
+            foreach (DataGridViewColumn column in dgv.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
         }
 
 
@@ -3577,7 +3583,7 @@ namespace Alimentacion
                                 if (!autorizar)
                                     if (t >= porcT)
                                     {
-                                        if (dif >= porcDif || dif <= (porcDif * -1))
+                                        if (dif >= porcDif && raciones.ZeroTip == true || dif <= (porcDif * -1) && raciones.ZeroTip == true)
                                         {
                                             cont++;
                                             panel1Autorizar.Visible = true;
@@ -3615,7 +3621,7 @@ namespace Alimentacion
                                 {
                                     if (t >= porcT)
                                     {
-                                        if (dif >= porcDif || dif <= (porcDif * -1))
+                                        if (dif >= porcDif && raciones.ZeroTip == true || dif <= (porcDif * -1) && raciones.ZeroTip == true)
                                         {
                                             cont++;
                                             panel1Autorizar.Visible = true;
@@ -4588,7 +4594,7 @@ namespace Alimentacion
         {
             Guardar();
         }
-
+        Tipificaciones raciones;
         private void button11_Click(object sender, EventArgs e)
         {
             DateTime racion_inicio = new DateTime(fecha.Year, fecha.Month, 1, hora_corte, 0, 0);
@@ -4623,11 +4629,19 @@ namespace Alimentacion
                 }
             }
 
-            Tipificaciones raciones = new Tipificaciones(ranchosId, emp_id, racion_inicio, racion_fin, dtALAS, dtALFO, conBasc);
+            //Tipificaciones raciones = new Tipificaciones(ranchosId, emp_id, racion_inicio, racion_fin, dtALAS, dtALFO, conBasc);
+            raciones = new Tipificaciones(ranchosId, emp_id, racion_inicio, racion_fin, dtALAS, dtALFO, conBasc);
             if (raciones.ShowDialog() == DialogResult.OK)
             {
 
             }
+
+            /*if (raciones.ZeroTip == true)
+            {
+                panel1Autorizar.Visible = true;
+                panel1Autorizar.Enabled = true;
+            }*/
+
         }
 
         private void button8_VisibleChanged(object sender, EventArgs e)

@@ -14,9 +14,12 @@ namespace Alimentacion
     {
         public static void SavePDF(ReportViewer viewer, string savePath)
         {
+            var deviceInfo = @"<DeviceInfo>
+            <EmbedFonts>None</EmbedFonts>
+            </DeviceInfo>";
             try
             {
-                byte[] Bytes = viewer.LocalReport.Render("PDF", "");
+                byte[] Bytes = viewer.LocalReport.Render("PDF", deviceInfo);
 
                 using (FileStream stream = new FileStream(savePath, FileMode.Create))
                 {

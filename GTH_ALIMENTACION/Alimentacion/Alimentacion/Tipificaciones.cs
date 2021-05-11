@@ -19,9 +19,11 @@ namespace Alimentacion
         DateTime fechaFin;
         DataTable dtAlas;
         DataTable dtAlfo;
+        DataTable dtRaciones;
         double porcT;
         double porcDif;
         int tipo;
+        bool zerotip=false;
 
         public Tipificaciones(string ran_id, int emp_id, DateTime fechaIni, DateTime fechaFin)
         {
@@ -48,12 +50,12 @@ namespace Alimentacion
         }
 
         private void Raciones_Load(object sender, EventArgs e)
-        {            
-            DataTable dtRaciones, dtIng;
+        {
+            DataTable dtIng;
             RacionMalTipificada(fechaIni, fechaFin, out dtRaciones);
             IngredienteMalTipíficado(ran_id, fechaIni, fechaFin, out dtIng);
             DataTable dt;
-            ColumnasTabla(out dt);            
+            ColumnasTabla(out dt);
 
             if (dtRaciones.Rows.Count > 0)
             {
@@ -70,13 +72,13 @@ namespace Alimentacion
                 row[0] = "";
                 row[1] = dtIng.Rows[0][0].ToString();
                 row[2] = "INGREDIENTE MAL TIPIFICADA";
-                dt.Rows.Add(row);                
+                dt.Rows.Add(row);
             }
 
             if (dtAlas.Rows.Count > 0 || dtAlfo.Rows.Count > 0)
             {
                 DataTable dtA, dtF;
-                Alimentos(out dtA);                
+                Alimentos(out dtA);
                 Forraje(out dtF);
 
                 if (dtA.Rows.Count > 0)
@@ -105,6 +107,14 @@ namespace Alimentacion
             }
             dgvRevisar.DataSource = dt;
             FormatoGrid(dgvRevisar);
+            if (dt.Rows.Count > 0)
+            {
+                zerotip = false;
+            }
+            else if (dt.Rows.Count == 0)
+            {
+                zerotip = true;
+            }
         }
 
         private void ColumnasTabla(out DataTable dt)
@@ -131,12 +141,12 @@ namespace Alimentacion
                         + " where ran_id IN(" + ranId + ") AND rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha< '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
                         + " AND SUBSTRING(ing_clave, 1,4) NOT IN('ALAS', 'ALFO') AND ing_descripcion not IN('AGUA', 'WATER') "
                         + " AND(ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) not IN('00', '01', '02', '90')) "
-                        + " AND(SUBSTRING(ing_descripcion, 1, 1) NOT IN('1', '2', '3', '4')  AND ing_descripcion like '%SOB%')"; 
+                        + " AND(SUBSTRING(ing_descripcion, 1, 1) NOT IN('1', '2', '3', '4')  AND ing_descripcion like '%SOB%')";
             conn.QueryAlimento(query, out dt);
         }
 
         private void FormatoGrid(DataGridView dgv)
-        {            
+        {
             BloquearDGV(dgv);
             dgv.RowHeadersVisible = false;
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
@@ -169,8 +179,8 @@ namespace Alimentacion
             DataTable dt;
             string query = "select DISTINCT ing_descripcion AS Tipificacion "
                             + " from racion "
-                            + " where ran_id IN(" + ran_id +  ") AND rac_fecha >= '" + fechaIni.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha< '" + fechaFin.ToString("yyyy-MM-dd HH:mm") + "' "               
-                            + " AND SUBSTRING(ing_clave, 1,4) NOT IN('ALAS', 'ALFO') " 
+                            + " where ran_id IN(" + ran_id + ") AND rac_fecha >= '" + fechaIni.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha< '" + fechaFin.ToString("yyyy-MM-dd HH:mm") + "' "
+                            + " AND SUBSTRING(ing_clave, 1,4) NOT IN('ALAS', 'ALFO') "
                             + " AND ing_descripcion not IN('AGUA', 'WATER') "
                             + " AND(ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) not IN('00', '01', '02', '90')) "
                             + " AND(SUBSTRING(ing_descripcion, 1, 1) NOT IN('1', '2', '3', '4')  AND ing_descripcion like '%SOB%') "
@@ -185,7 +195,7 @@ namespace Alimentacion
 
             return validacion;
         }
-     
+
         private void Alimentos(out DataTable dt)
         {
             dt = new DataTable();
@@ -209,18 +219,18 @@ namespace Alimentacion
                     dif = dtAlas.Rows[i][11] != DBNull.Value ? Convert.ToDouble(dtAlas.Rows[i][11]) : 0;
 
                     if (invF == 0)
-                    { 
+                    {
                         validacion = true;
                         motivo = "INVENTARIO FINAL EN 0,";
                     }
-                    
-                    if ((sie < consumo) || (invF == 0 && sie < consumoT) )
+
+                    if ((sie < consumo) || (invF == 0 && sie < consumoT))
                     {
                         validacion = true;
                         motivo += " INVENTARIO INSUFICIENTE,";
 
                     }
-                    
+
                     if ((consumo == 0 && consumoT > 0) || (consumo > 0 && consumoT == 0))
                     {
                         validacion = true;
@@ -234,25 +244,25 @@ namespace Alimentacion
                             validacion = true;
                             motivo += " PORCENTAJES ESTAN ARRIBA DE LO PERMITIDO ";
                         }
-                    
-                    if(validacion)
+
+                    if (validacion)
                     {
                         DataRow row = dt.NewRow();
                         row[0] = dtAlas.Rows[i][2].ToString();
                         row[1] = dtAlas.Rows[i][3].ToString();
-                        row[2] = motivo.Substring(0, motivo.Length -1);
+                        row[2] = motivo.Substring(0, motivo.Length - 1);
                         dt.Rows.Add(row);
 
                     }
                 }
-            }          
-            
+            }
+
         }
 
         private void Forraje(out DataTable dt)
         {
-            dt = new DataTable();            
-            
+            dt = new DataTable();
+
             if (dtAlfo.Rows.Count > 0)
             {
                 dt.Columns.Add("CLAVE");
@@ -281,11 +291,11 @@ namespace Alimentacion
                         validacion = true;
                         motivo += " INVENTARIO INSUFICIENTE,";
                     }
-                    
+
                     if (bascula > 0 && tracker == 0)
                     {
                         validacion = true;
-                        motivo += " NO HAY CONSUMO EN BASCULA PERO HAY CONSUMO EN TRACKER,"; 
+                        motivo += " NO HAY CONSUMO EN BASCULA PERO HAY CONSUMO EN TRACKER,";
                     }
                     if (bascula == 0 && tracker > 0)
                     {
@@ -310,7 +320,7 @@ namespace Alimentacion
                         dt.Rows.Add(row);
 
                     }
-                            
+
                 }
 
             }
@@ -334,6 +344,10 @@ namespace Alimentacion
             }
             return base.ProcessDialogKey(keyData);
         }
-      
+
+        public bool ZeroTip
+        {
+            get => zerotip;
+        }
     }
 }

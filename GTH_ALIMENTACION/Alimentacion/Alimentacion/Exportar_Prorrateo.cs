@@ -209,24 +209,25 @@ namespace Alimentacion
 
                 //Datatable para saltar un renglon
                 DataTable dtSalto;
+                
                 ColumnasDT(out dtSalto);
                 //dtSalto.Columns.Add("TOTAL").DataType = System.Type.GetType("System.Double");
 
                 DataRow drEnter = dtSalto.NewRow();
                 drEnter[0] = "";
                 drEnter[1] = "";
-                drEnter[2] = 0;
-                drEnter[3] = 0;
-                drEnter[4] = 0;
-                drEnter[5] = 0;
-                drEnter[6] = 0;
-                drEnter[7] = 0;
-                drEnter[8] = 0;
-                drEnter[9] = 0;
-                drEnter[10] = 0;
+                drEnter[2] = "0";
+                drEnter[3] = "0";
+                drEnter[4] = "0";
+                drEnter[5] = "0";
+                drEnter[6] = "0";
+                drEnter[7] = "0";
+                drEnter[8] = "0";
+                drEnter[9] = "0";
+                drEnter[10] = "0";
                 dtSalto.Rows.Add(drEnter);
 
-                
+
                 string bascula = " LEFT JOIN ("
                             + "select art_clave AS Clave,  pro_consumo AS Peso "
                             + " FROM prorrateo "
@@ -297,7 +298,7 @@ namespace Alimentacion
 
                 DataTable dtBal;
                 string queryBal = "";
-                
+
                 queryBal = "select SUM(pro_consumo) AS Peso "
                            + " FROM prorrateo "
                            + " WHERE SUBSTRING(art_clave,1,4) IN('ALFO') "
@@ -322,66 +323,98 @@ namespace Alimentacion
                     tf_kgGanado += Convert.ToDouble(dtf.Rows[i][9]);
                     tf_total += Convert.ToDouble(dtf.Rows[i][10]);
                 }
+                //Auxiliar de la tabla para cambiar tipos de datos
+                DataTable dataaux;
+                ColumnasDT(out dataaux);
+                //copia de la tabla dtf
+                for (int i = 0; i < dtf.Rows.Count; i++)
+                {
+                    DataRow adrow = dataaux.NewRow();
+                    string rowaux;
+                    rowaux = dtf.Rows[i][0].ToString();
+                    adrow[0] = rowaux;
+                    rowaux = dtf.Rows[i][1].ToString();
+                    adrow[1] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][2]).ToString("#,0");
+                    adrow[2] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][3]).ToString("#,0");
+                    adrow[3] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][4]).ToString("#,0");
+                    adrow[4] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][5]).ToString("#,0");
+                    adrow[5] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][6]).ToString("#,0");
+                    adrow[6] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][7]).ToString("#,0");
+                    adrow[7] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][8]).ToString("#,0");
+                    adrow[8] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][9]).ToString("#,0");
+                    adrow[9] = rowaux;
+                    rowaux = Convert.ToDouble(dtf.Rows[i][10]).ToString("#,0");
+                    adrow[10] = rowaux;
+                    dataaux.Rows.Add(adrow);
+                }
 
                 //Renglon TOTAL FORRAJE
-                DataRow drF = dtf.NewRow();
+                DataRow drF = dataaux.NewRow();
                 drF[0] = "";
                 drF[1] = "TOTAL FORRAJE";
-                drF[2] = tf_jaulas;
-                drF[3] = tf_dest1;
-                drF[4] = tf_dest2;
-                drF[5] = tf_vp;
-                drF[6] = tf_kgCrianza;
-                drF[7] = tf_prod;
-                drF[8] = tf_secas;
-                drF[9] = tf_kgGanado;
-                drF[10] = tf_total;
-                dtf.Rows.Add(drF);
+                drF[2] = tf_jaulas.ToString("#,0");
+                drF[3] = tf_dest1.ToString("#,0");
+                drF[4] = tf_dest2.ToString("#,0");
+                drF[5] = tf_vp.ToString("#,0");
+                drF[6] = tf_kgCrianza.ToString("#,0");
+                drF[7] = tf_prod.ToString("#,0");
+                drF[8] = tf_secas.ToString("#,0");
+                drF[9] = tf_kgGanado.ToString("#,0");
+                drF[10] = tf_total.ToString("#,0");
+                dataaux.Rows.Add(drF);
 
                 //Renglon TOTAL BASCULA
-                drF = dtf.NewRow();
+                drF = dataaux.NewRow();
                 drF[0] = "";
                 drF[1] = "TOTAL BASCULA";
-                drF[2] = 0;
-                drF[3] = 0;
-                drF[4] = 0;
-                drF[5] = 0;
-                drF[6] = 0;
-                drF[7] = 0;
-                drF[8] = 0;
-                drF[9] = 0;
-                drF[10] = totBal;
-                dtf.Rows.Add(drF);
+                drF[2] = "0";
+                drF[3] = "0";
+                drF[4] = "0";
+                drF[5] = "0";
+                drF[6] = "0";
+                drF[7] = "0";
+                drF[8] = "0";
+                drF[9] = "0";
+                drF[10] = totBal.ToString("#,0");
+                dataaux.Rows.Add(drF);
 
                 //Renglon TOTAL FALTANTE BASCULA
-                drF = dtf.NewRow();
+                drF = dataaux.NewRow();
                 drF[0] = "";
                 drF[1] = "TOTAL FALTANTE BASCULA";
-                drF[2] = 0;
-                drF[3] = 0;
-                drF[4] = 0;
-                drF[5] = 0;
-                drF[6] = 0;
-                drF[7] = 0;
-                drF[8] = 0;
-                drF[9] = 0;
-                drF[10] = tf_total - totBal;
-                dtf.Rows.Add(drF);
+                drF[2] = "0";
+                drF[3] = "0";
+                drF[4] = "0";
+                drF[5] = "0";
+                drF[6] = "0";
+                drF[7] = "0";
+                drF[8] = "0";
+                drF[9] = "0";
+                drF[10] = ""+(tf_total - totBal).ToString("#,0");
+                dataaux.Rows.Add(drF);
 
                 //Renglon Diferencia Tracker
-                drF = dtf.NewRow();
+                drF = dataaux.NewRow();
                 drF[0] = "";
                 drF[1] = "PORCENTAJE DIFERENCIA CON TRACKER";
-                drF[2] = 0;
-                drF[3] = 0;
-                drF[4] = 0;
-                drF[5] = 0;
-                drF[6] = 0;
-                drF[7] = 0;
-                drF[8] = 0;
-                drF[9] = 0;
-                drF[10] = PorcentajeDif("ALFO");
-                dtf.Rows.Add(drF);
+                drF[2] = "0";
+                drF[3] = "0";
+                drF[4] = "0";
+                drF[5] = "0";
+                drF[6] = "0";
+                drF[7] = "0";
+                drF[8] = "0";
+                drF[9] = "0";
+                drF[10] = PorcentajeDif("ALFO").ToString("#,0.0");
+                dataaux.Rows.Add(drF);
      
                 //ALAS
                 DataTable dta1;
@@ -631,81 +664,113 @@ namespace Alimentacion
                     ta_kcrianza += Convert.ToDouble(dta1.Rows[i][9]);
                     ta_basct += Convert.ToDouble(dta1.Rows[i][10]);
                 }
+
+                DataTable dataaux2;
+                ColumnasDT(out dataaux2);
+                //copia de la tabla dtf pasando a string para mostrar correctamente los numeros
+                for (int i = 0; i < dta1.Rows.Count; i++)
+                {
+                    DataRow adrow2 = dataaux2.NewRow();
+                    string rowaux2;
+                    rowaux2 = dta1.Rows[i][0].ToString();
+                    adrow2[0] = rowaux2;
+                    rowaux2 = dta1.Rows[i][1].ToString();
+                    adrow2[1] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][2]).ToString("#,0");
+                    adrow2[2] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][3]).ToString("#,0");
+                    adrow2[3] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][4]).ToString("#,0");
+                    adrow2[4] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][5]).ToString("#,0");
+                    adrow2[5] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][6]).ToString("#,0");
+                    adrow2[6] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][7]).ToString("#,0");
+                    adrow2[7] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][8]).ToString("#,0");
+                    adrow2[8] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][9]).ToString("#,0");
+                    adrow2[9] = rowaux2;
+                    rowaux2 = Convert.ToDouble(dta1.Rows[i][10]).ToString("#,0");
+                    adrow2[10] = rowaux2;
+                    dataaux2.Rows.Add(adrow2);
+                }
                 //Renglon Total concentrado
-                DataRow dr1 = dta1.NewRow();
+                DataRow dr1 = dataaux2.NewRow();
                 dr1[0] = "";
                 dr1[1] = "TOTAL CONCENTRADO";
-                dr1[2] = ta_prod;
-                dr1[3] = ta_secas;
-                dr1[4] = ta_kganado;
-                dr1[5] = ta_jaulas;
-                dr1[6] = ta_dest1;
-                dr1[7] = ta_dest2;
-                dr1[8] = ta_vaq;
-                dr1[9] = ta_kcrianza;
-                dr1[10] = ta_basct;
-                dta1.Rows.Add(dr1);
+                dr1[2] = ta_prod.ToString("#,0");
+                dr1[3] = ta_secas.ToString("#,0"); 
+                dr1[4] = ta_kganado.ToString("#,0");
+                dr1[5] = ta_jaulas.ToString("#,0");
+                dr1[6] = ta_dest1.ToString("#,0");
+                dr1[7] = ta_dest2.ToString("#,0");
+                dr1[8] = ta_vaq.ToString("#,0");
+                dr1[9] = ta_kcrianza.ToString("#,0");
+                dr1[10] = ta_basct.ToString("#,0");
+                dataaux2.Rows.Add(dr1);
 
                 //Renglon Total Inventario
-                dr1 = dta1.NewRow();
+                dr1 = dataaux2.NewRow();
                 dr1[0] = "";
                 dr1[1] = "TOTAL INVENTARIO";
-                dr1[2] = 0;
-                dr1[3] = 0;
-                dr1[4] = 0;
-                dr1[5] = 0;
-                dr1[6] = 0;
-                dr1[7] = 0;
-                dr1[8] = 0;
-                dr1[9] = 0;
-                dr1[10] = totInv;
-                dta1.Rows.Add(dr1);
+                dr1[2] = "0";
+                dr1[3] = "0";
+                dr1[4] = "0";
+                dr1[5] = "0";
+                dr1[6] = "0";
+                dr1[7] = "0";
+                dr1[8] = "0";
+                dr1[9] = "0";
+                dr1[10] = totInv.ToString("#,0");
+                dataaux2.Rows.Add(dr1);
 
                 //Renglon Total Faltante inventario
-                dr1 = dta1.NewRow();
+                dr1 = dataaux2.NewRow();
                 dr1[0] = "";
                 dr1[1] = "TOTAL FALTANTE INVENTARIO";
-                dr1[2] = 0;
-                dr1[3] = 0;
-                dr1[4] = 0;
-                dr1[5] = 0;
-                dr1[6] = 0;
-                dr1[7] = 0;
-                dr1[8] = 0;
-                dr1[9] = 0;
-                dr1[10] = ta_basct - totInv;
-                dta1.Rows.Add(dr1);
+                dr1[2] = "0";
+                dr1[3] = "0";
+                dr1[4] = "0";
+                dr1[5] = "0";
+                dr1[6] = "0";
+                dr1[7] = "0";
+                dr1[8] = "0";
+                dr1[9] = "0";
+                dr1[10] = (ta_basct - totInv).ToString("#,0");
+                dataaux2.Rows.Add(dr1);
 
                 //Renglon Porcentaje Diferencia Con Tracker
-                dr1 = dta1.NewRow();
+                dr1 = dataaux2.NewRow();
                 dr1[0] = "";
                 dr1[1] = "PORCENTAJE DIFERENCIA CON TRACKER";
-                dr1[2] = 0;
-                dr1[3] = 0;
-                dr1[4] = 0;
-                dr1[5] = 0;
-                dr1[6] = 0;
-                dr1[7] = 0;
-                dr1[8] = 0;
-                dr1[9] = 0;
-                dr1[10] = PorcentajeDif("ALAS");
-                dta1.Rows.Add(dr1);
+                dr1[2] = "0";
+                dr1[3] = "0";
+                dr1[4] = "0";
+                dr1[5] = "0";
+                dr1[6] = "0";
+                dr1[7] = "0";
+                dr1[8] = "0";
+                dr1[9] = "0";
+                dr1[10] = PorcentajeDif("ALAS").ToString("#,0.0");
+                dataaux2.Rows.Add(dr1);
 
 
                 //Renglon PORCENTAJE TOTAL Diferencia Con Tracker
-                dr1 = dta1.NewRow();
+                dr1 = dataaux2.NewRow();
                 dr1[0] = "";
                 dr1[1] = "PORCENTAJE TOTAL DE DIFERENCIA CON TRACKER";
-                dr1[2] = 0;
-                dr1[3] = 0;
-                dr1[4] = 0;
-                dr1[5] = 0;
-                dr1[6] = 0;
-                dr1[7] = 0;
-                dr1[8] = 0;
-                dr1[9] = 0;
-                dr1[10] = PorcentajeDif("ALAS") + PorcentajeDif("ALFO");
-                dta1.Rows.Add(dr1);
+                dr1[2] = "0";
+                dr1[3] = "0";
+                dr1[4] = "0";
+                dr1[5] = "0";
+                dr1[6] = "0";
+                dr1[7] = "0";
+                dr1[8] = "0";
+                dr1[9] = "0";
+                dr1[10] = (PorcentajeDif("ALAS") + PorcentajeDif("ALFO")).ToString("#,0.0");
+                dataaux2.Rows.Add(dr1);
                 //Renglon Porcentaje Diferencia Con Tracker
                 //dr1 = dta1.NewRow();
                 //dr1[0] = "";
@@ -722,9 +787,9 @@ namespace Alimentacion
                 //dta1.Rows.Add(dr1);
 
                 // Juntar los DataTables en 1
-                dtProrrateo.Merge(dtf);
+                dtProrrateo.Merge(dataaux);
                 dtProrrateo.Merge(dtSalto);
-                dtProrrateo.Merge(dta1);
+                dtProrrateo.Merge(dataaux2);
 
                 DataTable dtRebano;
                 query = "select ia_rebano, ROUND(SUM(CONVERT(FLOAT,ia_jaulas))/ COUNT(DISTINCT ia_fecha),0) AS Jaulas, ROUND(SUM(CONVERT(FLOAT, ia_destetadas)) / COUNT(DISTINCT ia_fecha), 0) AS Destetadas, "
@@ -807,7 +872,7 @@ namespace Alimentacion
                                         row[7] = dtProrrateo.Rows[j][7];
                                         row[8] = dtProrrateo.Rows[j][8];
                                         row[9] = dtProrrateo.Rows[j][9];
-                                        row[10] = bal;
+                                        row[10] = bal.ToString("#,0.0");
                                         break;
                                     case "PORCENTAJE TOTAL DE DIFERENCIA CON TRACKER":
                                         p = Convert.ToDouble(dtProrrateo.Rows[j][10]);
@@ -823,7 +888,7 @@ namespace Alimentacion
                                         row[7] = dtProrrateo.Rows[j][7];
                                         row[8] = dtProrrateo.Rows[j][8];
                                         row[9] = dtProrrateo.Rows[j][9];
-                                        row[10] = bal;
+                                        row[10] = bal.ToString("#,0.0");
                                         break;
                                     case "TOTAL BASCULA":
                                         p = Convert.ToDouble(dtProrrateo.Rows[j][10]);
@@ -946,9 +1011,9 @@ namespace Alimentacion
                         ReportDataSource source1 = new ReportDataSource("DataSet1", dtPro[i]);
                         reportViewer1.LocalReport.DataSources.Clear();
                         reportViewer1.LocalReport.DataSources.Add(source1);
-
+                        //parametros1[0] = new ReportParameter("Establo", ran_nombre + " Rebaño: " + (i + 1).ToString());
                         ReportParameter[] parametros1 = new ReportParameter[3];
-                        parametros1[0] = new ReportParameter("Establo", ran_nombre + " Rebaño: " + (i + 1).ToString());
+                        parametros1[0] = new ReportParameter("Establo", emp_nombre + " Rebaño: " + (i + 1).ToString());
                         parametros1[1] = new ReportParameter("periodo", "PERIODO DEL " + periodoI.ToString("dd/MM/yyyy") + " al " + periodoF.ToString("dd/MM/yyyy"));
                         parametros1[2] = new ReportParameter("fiabilidad", cadFiabilidad);
                         reportViewer1.LocalReport.SetParameters(parametros1);
@@ -967,7 +1032,7 @@ namespace Alimentacion
 
                 string nombre =  ran_id == 3 ? "PEDREÑA" : ran_nombre;
                 ReportParameter[] parametros = new ReportParameter[3];
-                parametros[0] = new ReportParameter("Establo", tituloReporte);
+                parametros[0] = new ReportParameter("Establo", emp_nombre.ToUpper());
                 parametros[1] = new ReportParameter("periodo", "PERIODO DEL " + periodoI.ToString("dd/MM/yyyy") + " al " + periodoF.ToString("dd/MM/yyyy"));
                 parametros[2] = new ReportParameter("fiabilidad", cadFiabilidad);
                 reportViewer1.LocalReport.SetParameters(parametros);
@@ -987,7 +1052,8 @@ namespace Alimentacion
                     button2.Visible = true;
                 }
                 textBox1.Focus();
-              
+                //ReporteAlimentos();
+                //ReporteForraje();
             }
         }
 
@@ -1092,7 +1158,15 @@ namespace Alimentacion
             fechaR = new DateTime(DateTime.Today.Year, DateTime.Today.Month,1);
             fechaR = DateTime.Today.Day >= 1 && DateTime.Today.Day < 6 ? fechaR.AddDays(-1) : fechaR.AddMonths(1).AddDays(-1);
             fechaR = fecha;
-            cadFiabilidad = fiabilidad ? "FIABILIDAD ALTA" : "FIABILIDAD BAJA";
+            if ((PorcentajeDif("ALAS") + PorcentajeDif("ALFO")) < -5 || (PorcentajeDif("ALAS") + PorcentajeDif("ALFO")) > 5)
+            {
+                cadFiabilidad = "FIABILIDAD BAJA";
+            }
+            else
+            {
+                cadFiabilidad = "FIABILIDAD ALTA";
+            }
+            //cadFiabilidad = fiabilidad ? "FIABILIDAD ALTA" : "FIABILIDAD BAJA";
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -1208,10 +1282,12 @@ namespace Alimentacion
             ColumnasForraje(tipoP, out dtF);
 
             string periodo;
-            double existencia, tracker, bascula, temp, t, dif;
+            double existencia, tracker, bascula, temp, t, dif,p;
             double basculaT = 0, pT = 0, tT = 0, trackerT = 0, pdif;
             if (tipoP == 3)
             {
+                pT = 0;
+                tT = 0;
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     existencia = Convert.ToDouble(dt.Rows[i][3]);
@@ -1230,7 +1306,9 @@ namespace Alimentacion
                     row["P"] = Convert.ToDouble(dt.Rows[i][6]).ToString("#,0.0");
                     row["T"] = Convert.ToDouble(dt.Rows[i][7]).ToString("#,0.0");
                     row["TRACKER"] = Convert.ToDouble(dt.Rows[i][8]).ToString("#,0");
-                    row["EXISTENCIA"] = Convert.ToDouble(dt.Rows[i][9]).ToString("#,0.0");
+                    row["EXISTENCIA"] = existencia >= temp ? "si" : "no";
+                    //Se cambio la linea de arriba que era ....:
+                    //Convert.ToDouble(dt.Rows[i][9]).ToString("#,0.0");
                     row["DIFKG"] = Convert.ToDouble(dt.Rows[i][10]).ToString("#,0.0");
                     row["DIFPORC"] = Convert.ToDouble(dt.Rows[i][11]).ToString("#,0.0");
                     dtF.Rows.Add(row);
@@ -1264,13 +1342,16 @@ namespace Alimentacion
             }
             else if (tipoP == 4)
             {
+                pT = 0;
+                tT = 0;
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     existencia = Convert.ToDouble(dt.Rows[i][3]);
                     tracker = Convert.ToDouble(dt.Rows[i][8]); trackerT += tracker;
                     bascula = Convert.ToDouble(dt.Rows[i][5]); basculaT += bascula;
-                    pT = Convert.ToDouble(dt.Rows[i][6]);
-                    t = Convert.ToDouble(dt.Rows[i][7]); tT += t;
+                    pT += Convert.ToDouble(dt.Rows[i][6]);
+                    t = Convert.ToDouble(dt.Rows[i][7]); 
+                    tT += t;
                     dif = Convert.ToDouble(dt.Rows[i][10]);
                     temp = tracker > 0 ? bascula : 0;
                     DataRow row = dtF.NewRow();
@@ -1328,6 +1409,8 @@ namespace Alimentacion
             }
             else
             {
+                pT = 0;
+                tT = 0;
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     existencia = Convert.ToDouble(dt.Rows[i][3]);
@@ -1449,7 +1532,6 @@ namespace Alimentacion
             dt.Columns.Add("DIF_KG").DataType = System.Type.GetType("System.String");
             dt.Columns.Add("DIF").DataType = System.Type.GetType("System.String");
             dt.Columns.Add("EXISTENCIA").DataType = System.Type.GetType("System.String");
-            
         }
 
         private void ReporteAlimentos()
@@ -1548,7 +1630,7 @@ namespace Alimentacion
                 reporte.Rows.Add(row);
             }
 
-            string mensaje = "Prorrateo - " + ran_nombre;//"Se anexan los reportes de PRORRATEO del establo " + ran_nombre;
+            string mensaje = "Prorrateo - " + emp_nombre.ToUpper()+" ("+ran_nombre.ToUpper()+")";//"Se anexan los reportes de PRORRATEO del establo " + ran_nombre;
             string asunto = "Reportes Consumos";
 
             DataTable dtcorreo;
@@ -1780,20 +1862,21 @@ namespace Alimentacion
             else
                 return false;
         }
+        //cambio a string para formato de numeros en reporte
         private void ColumnasDT(out DataTable dt)
         {
             dt = new DataTable();
             dt.Columns.Add("CLAVE").DataType = System.Type.GetType("System.String");
             dt.Columns.Add("INGREDIENTE").DataType = System.Type.GetType("System.String");
-            dt.Columns.Add("JAULAS").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("DESTETADAS1").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("DESTETADAS2").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("VAQUILLAS_PRENADAS").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("TOTAL_KGS_CRIANZA").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("PRODUCCION").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("SECAS").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("TOTAL_KGS_GANADO").DataType = System.Type.GetType("System.Double");
-            dt.Columns.Add("TOTAL").DataType = System.Type.GetType("System.Double");
+            dt.Columns.Add("JAULAS").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("DESTETADAS1").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("DESTETADAS2").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("VAQUILLAS_PRENADAS").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("TOTAL_KGS_CRIANZA").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("PRODUCCION").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("SECAS").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("TOTAL_KGS_GANADO").DataType = System.Type.GetType("System.String");
+            dt.Columns.Add("TOTAL").DataType = System.Type.GetType("System.String");
         }
         private string RanchosEP()
         {

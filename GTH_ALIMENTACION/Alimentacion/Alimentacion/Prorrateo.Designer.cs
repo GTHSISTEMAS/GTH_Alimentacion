@@ -616,7 +616,7 @@
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(900, 590);
+            this.dataGridView1.Size = new System.Drawing.Size(900, 478);
             this.dataGridView1.TabIndex = 8;
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
@@ -978,7 +978,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(900, 900);
+            this.panel3.Size = new System.Drawing.Size(900, 788);
             this.panel3.TabIndex = 20;
             // 
             // panel9
@@ -988,7 +988,7 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel9.Location = new System.Drawing.Point(0, 310);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(900, 590);
+            this.panel9.Size = new System.Drawing.Size(900, 478);
             this.panel9.TabIndex = 23;
             // 
             // dataGridView2
@@ -1012,7 +1012,7 @@
             this.dataGridView2.RowHeadersWidth = 51;
             this.dataGridView2.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView2.Size = new System.Drawing.Size(900, 590);
+            this.dataGridView2.Size = new System.Drawing.Size(900, 478);
             this.dataGridView2.TabIndex = 9;
             this.dataGridView2.Visible = false;
             this.dataGridView2.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView2_CellFormatting);
@@ -1046,7 +1046,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(900, 900);
+            this.ClientSize = new System.Drawing.Size(900, 788);
             this.Controls.Add(this.panel3);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
