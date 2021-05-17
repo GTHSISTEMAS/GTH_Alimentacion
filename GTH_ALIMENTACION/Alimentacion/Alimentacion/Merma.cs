@@ -16,6 +16,8 @@ namespace Alimentacion
         ConnSIO conn = new ConnSIO();
         Button Button;
         string Numero_Rancho = "";
+        DataTable dtmerma;
+        string filterField = "Clave";
         public Merma(Button buttonReporte , string numRancho)
         {
             InitializeComponent();
@@ -33,92 +35,92 @@ namespace Alimentacion
         {
             DateTime Actual = DateTime.Now;
             DateTime Inicio = new DateTime(Actual.Year, Actual.Month, 1);
-            DataTable dt,dtmerma;
+            DataTable dt;
 
             Inicio = Inicio.AddDays(-1);
 
 
 
-            string querymerma = @"SELECT Ingrediente as Ingrediente , Ing_Clave as Clave , Por_Merma as '% Merma'
-                            FROM merma
-                            Order by Ingrediente";
+            string querymerma = @"
+             SELECT 
+                I.Clave as Clave,
+                P.prod_nombre AS Ingrediente,
+                IIF(M.Por_Merma is NULL, 0 , M.Por_Merma) AS '% Merma',
+                IIF(M.Por_Extra is NULL, 0 , M.Por_Extra) AS '% Extra'
+                FROM(
+                    SELECT  ing_clave       AS Clave
+					,ing_descripcion AS INGREDIENTE
+					,SUM(rac_mh)     AS TOTAL
+					FROM racion
+					WHERE 
+					 ran_id IN (" + Numero_Rancho + @")
 
-
-
-
-            conn.QueryAlimento(querymerma,out dtmerma);
-
-            if (dtmerma.Rows.Count > 0)
-            {
-                dgv_Mermas.DataSource = dtmerma;
-            }
-            else
-            {
-
-                string query = @"
-                                SELECT  T.Clave
-		                               ,P.prod_nombre
-	                                   ,'0' as '%Merma'
-	                            FROM 
-	                            (
-					                            SELECT  ing_clave       AS Clave
-					                            ,ing_descripcion AS INGREDIENTE
-					                            ,SUM(rac_mh)     AS TOTAL
-					                            FROM racion
-					                            WHERE  ran_id IN ("+ Numero_Rancho + @") 
-					                            AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) = 0 
-					                            AND SUBSTRING(rac_descripcion,3,2) not in('00','01','02') 
-					                            GROUP BY  ing_clave
-							                             ,ing_descripcion 
-					      UNION
-					                            SELECT  T2.Clave
-					                                   ,T2.Ing
-					                                   ,(T1.Peso * T2.Porc) AS Total
-					                            FROM 
-					                            (
-						                            SELECT  ing_descripcion AS Pmz
-						                                   ,SUM(rac_mh)     AS Peso
-						                            FROM racion
+                    AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) = 0 
+					AND SUBSTRING(rac_descripcion,3,2) not in('00','01','02') 
+					GROUP BY  ing_clave
+							 ,ing_descripcion 
+					UNION
+					SELECT  T2.Clave
+					       ,T2.Ing
+					       ,(T1.Peso * T2.Porc) AS Total
+					FROM 
+					(
+						SELECT  ing_descripcion AS Pmz
+						       ,SUM(rac_mh)     AS Peso
+						FROM racion
 				
-						                            WHERE ran_id IN (" + Numero_Rancho + @") 
-						                            AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 
-						                            AND SUBSTRING(ing_descripcion, 3, 2) IN ('00', '01', '02') 
-						                            AND SUBSTRING(rac_descripcion,3,2) NOT IN ('00','01','02') 
-						                            GROUP BY  ing_descripcion
-					                            ) T1
-					     LEFT JOIN 
-					                            (
-						                            SELECT  pmez_descripcion AS Pmz
-						                                   ,ing_clave        AS Clave
-						                                   ,ing_descripcion  AS Ing
-						                                   ,pmez_porcentaje  AS Porc
-						                            FROM porcentaje_Premezcla 
-					                            )T2
-					                            ON T1.Pmz = T2.Pmz
-					                            ) T
+						WHERE 
+						ran_id IN (" + Numero_Rancho + @")  
+						AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 
+						AND SUBSTRING(ing_descripcion, 3, 2) IN ('00', '01', '02') 
+						AND SUBSTRING(rac_descripcion,3,2) NOT IN ('00','01','02') 
+						GROUP BY  ing_descripcion
+					) T1
+					LEFT JOIN 
+					(
+						SELECT  pmez_descripcion AS Pmz
+						       ,ing_clave        AS Clave
+						       ,ing_descripcion  AS Ing
+						       ,pmez_porcentaje  AS Porc
+						FROM porcentaje_Premezcla 
+					)T2
+					ON T1.Pmz = T2.Pmz
+					UNION
+					SELECT DISTINCT [ing_clave]
+					,[ing_descripcion]
+					,0
+					FROM [DBALIMENTO].[dbo].[ingrediente] where ran_id IN (" + Numero_Rancho + @")
+  
+                  ) I
+                LEFT JOIN(
+                   SELECT [prod_clave]
+		                  ,prod_nombre
+                   FROM [DBALIMENTO].[dbo].[producto]
+                ) P ON P.prod_clave = I.Clave
+                LEFT JOIN(
+	                SELECT 
+                       [Ingrediente]
+                      ,[Por_Merma]
+                      ,[Por_Extra]
+                    FROM [DBALIMENTO].[dbo].[merma]
+                ) M ON M.Ingrediente = I.Clave
+                WHERE I.Clave <> ''
+                group by I.Clave,P.prod_nombre,M.Por_Merma,M.Por_Extra";
 
-					                            LEFT JOIN(
-						                            SELECT 
-							                               [prod_clave]
-							                              ,prod_nombre
-						                              FROM [DBALIMENTO].[dbo].[producto]
-					    ) P ON P.prod_clave = T.Clave
-					    Where P.prod_clave <> ''
-					    group by T.Clave,P.prod_nombre
-					    order by T.Clave";
-                conn.QueryAlimento(query, out dt);
-                dgv_Mermas.DataSource = dt;
-                
 
-            }
 
+
+            conn.QueryAlimento(querymerma, out dtmerma);
+            dgv_Mermas.DataSource = dtmerma;
             dgv_Mermas.ReadOnly = false;
             foreach (DataGridViewColumn dgvc in dgv_Mermas.Columns)
             {
                 dgvc.ReadOnly = true;
             }
             dgv_Mermas.Columns[2].ReadOnly = false;
-            
+            dgv_Mermas.Columns[3].ReadOnly = false;
+
+
 
 
         }
@@ -148,51 +150,64 @@ namespace Alimentacion
             int continuar = 1;
             for (int j = 0; j < dgv_Mermas.Rows.Count; j++)
             {
-                if(Convert.ToInt32(dgv_Mermas[2, j].Value) >100)
+                if (Convert.ToInt32(dgv_Mermas[2, j].Value) > 100)
                 {
-                    MessageBox.Show("Error en ingrediente "+ dgv_Mermas[0, j].Value.ToString() + " :\nNo puedes registar mas del 100% de Merma.", "ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show("Error en ingrediente " + dgv_Mermas[0, j].Value.ToString() + " :\nNo puedes registar mas del 100% de Merma.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     continuar = 0;
                     break;
                 }
             }
+
             if (continuar == 1)
             {
-                if (dtmerma.Rows.Count > 0)
-                {
-                    for (int i = 0; i < dgv_Mermas.Rows.Count; i++)
-                    {
-                        if (dgv_Mermas[1, i].Value == null || dgv_Mermas[1, i].Value == DBNull.Value || String.IsNullOrWhiteSpace(dgv_Mermas[1, i].Value.ToString()))
-                        {
 
+                for (int j = 0; j < dgv_Mermas.Rows.Count - 1; j++)
+                {
+                    if (dgv_Mermas[0, j].Value == null || dgv_Mermas[0, j].Value == DBNull.Value || String.IsNullOrWhiteSpace(dgv_Mermas[0, j].Value.ToString()))
+                    {
+
+                    }
+                    else
+                    {
+                        DataTable dtmermaCreada;
+                        string querymermaCreada = @"SELECT Ingrediente as Ingrediente , Ing_Clave as Clave , Por_Merma as '% Merma'
+                            FROM merma WHERE Ingrediente = '" + dgv_Mermas[0, j].Value.ToString() + @"'
+                            Order by Ingrediente";
+                        conn.QueryAlimento(querymermaCreada, out dtmermaCreada);
+
+                        if (dtmermaCreada.Rows.Count > 0)
+                        {
+                            if (dgv_Mermas[1, j].Value == null || dgv_Mermas[1, j].Value == DBNull.Value || String.IsNullOrWhiteSpace(dgv_Mermas[1, j].Value.ToString()))
+                            {
+
+                            }
+                            else
+                            {
+
+                                conn.UPDATEAlimento("merma", "Por_Merma =" + dgv_Mermas[2, j].Value.ToString()+ ", Por_Extra = " + dgv_Mermas[3, j].Value.ToString(), "WHERE Ing_Clave = '" + dgv_Mermas[1, j].Value.ToString() + "'");
+                            }
                         }
                         else
                         {
+                            if (dgv_Mermas[1, j].Value == null || dgv_Mermas[1, j].Value == DBNull.Value || String.IsNullOrWhiteSpace(dgv_Mermas[1, j].Value.ToString()))
+                            {
 
-                            conn.UPDATEAlimento("merma", "Por_Merma =" + dgv_Mermas[2, i].Value.ToString(), "WHERE Ing_Clave = '" + dgv_Mermas[1, i].Value.ToString() + "'");
+                            }
+                            else
+                            {
+
+                                string nomb = dgv_Mermas[0, j].Value.ToString() == null ? "" : dgv_Mermas[0, j].Value.ToString();
+                                string clave = dgv_Mermas[1, j].Value.ToString() == null ? "" : dgv_Mermas[1, j].Value.ToString();
+                                float porcentaje = float.Parse(dgv_Mermas[2, j].Value.ToString()) == 0 ? 0 : float.Parse(dgv_Mermas[2, j].Value.ToString());
+                                float extra = float.Parse(dgv_Mermas[3, j].Value.ToString()) == 0 ? 0 : float.Parse(dgv_Mermas[3, j].Value.ToString());
+
+                                conn.InsertAlimento("Ingrediente,Ing_Clave,Por_Merma,Por_Extra", "merma", "'" + nomb + "','" + clave + "'," + porcentaje+","+extra);
+                            }
+
                         }
                     }
                 }
-                else
-                {
-                    for (int j = 0; j < dgv_Mermas.Rows.Count; j++)
-                    {
-                        if (dgv_Mermas[1, j].Value == null || dgv_Mermas[1, j].Value == DBNull.Value || String.IsNullOrWhiteSpace(dgv_Mermas[1, j].Value.ToString()))
-                        {
 
-                        }
-                        else
-                        {
-
-                            string nomb = dgv_Mermas[0, j].Value.ToString() == null ? "" : dgv_Mermas[0, j].Value.ToString();
-                            string clave = dgv_Mermas[1, j].Value.ToString() == null ? "" : dgv_Mermas[1, j].Value.ToString();
-                            float porcentaje = float.Parse(dgv_Mermas[2, j].Value.ToString()) == 0 ? 0 : float.Parse(dgv_Mermas[2, j].Value.ToString());
-
-                            conn.InsertAlimento("Ingrediente,Ing_Clave,Por_Merma", "merma", "'" + nomb + "','" + clave + "'," + porcentaje);
-                        }
-
-
-                    }
-                }
                 Button.Enabled = true;
 
                 this.Close();
@@ -235,6 +250,26 @@ namespace Alimentacion
             {
                 e.Handled = true;
             }
+        }
+
+        private void txtFiltroClave_TextChanged(object sender, EventArgs e)
+        {
+            dtmerma.DefaultView.RowFilter = $"{ dgv_Mermas.Columns[0].HeaderText} like '%{txtFiltroClave.Text}%'";
+        }
+
+        private void txtFiltroArticulo_TextChanged(object sender, EventArgs e)
+        {
+            dtmerma.DefaultView.RowFilter = $"{ dgv_Mermas.Columns[1].HeaderText} like '%{txtFiltroArticulo.Text}%'";
+        }
+
+        private void txtFiltroClave_MouseDown(object sender, MouseEventArgs e)
+        {
+            txtFiltroClave.Text = "";
+        }
+
+        private void txtFiltroArticulo_MouseDown(object sender, MouseEventArgs e)
+        {
+            txtFiltroArticulo.Text = "";
         }
     }
 }

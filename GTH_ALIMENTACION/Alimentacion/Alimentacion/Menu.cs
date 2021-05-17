@@ -46,7 +46,7 @@ namespace Alimentacion
 
             if (empresa)
             {
-                query = "SELECT MIN(T.Fecha) FROM( SELECT r.ran_id AS Rancho, CONVERT(date, MAX(r.rac_fecha)) AS Fecha FROM racion r "
+                query = "SELECT MAX(T.Fecha) FROM( SELECT r.ran_id AS Rancho, CONVERT(date, MAX(r.rac_fecha)) AS Fecha FROM racion r "
                    + " LEFT JOIN[DBSIO].[dbo].configuracion c ON c.ran_id = r.ran_id WHERE c.emp_id = " + emp_id.ToString()
                    + " GROUP BY r.ran_id) T";
             }
@@ -822,13 +822,13 @@ namespace Alimentacion
             if (checkBox1.Checked)
             {                
                 panelRDE.Visible = true;
-                panelReportes.Size = new Size(231, h+40);
+                panelReportes.Size = new Size(231, h+ 40);
                 ranchos = Establos();
             }
             else
             {
                 panelRDE.Visible = false;
-                panelReportes.Size = new Size(231, h-40);
+                panelReportes.Size = new Size(231, h- 40);
                 ranchos = ran_id.ToString();
             }            
         }
@@ -1375,6 +1375,18 @@ namespace Alimentacion
             Process.Start("C:\\MOVGANADO\\Consumos\\Procesos\\VentaRacion\\Programa\\Debug\\VentaRacion.exe");
         }
 
+        private void btnProyeccion_Click(object sender, EventArgs e)
+        {
+            menu = false;
+            pictureBox2.Visible = true;
+            bconfig = false;
+            //Consumo por Ingrediente
+            openChildFormPanel(new ProyeccionINg(ran_id, emp_id, ran_nombre, emp_nombre, tipo));
+            panelContenedor.Visible = true;
+            panelConfig.Visible = false;
+            this.Size = new Size(804, 544);
+        }
+
         public static void PrintIndexAndValues(IEnumerable myList)
         {
             int i = 0;
@@ -1433,16 +1445,16 @@ namespace Alimentacion
                         {
                             if (checkBox1.Visible && checkBox1.Checked == false || (checkBox1.Visible == false && tipo != 1))
                                 cont = cont - 1;
-                            panelReportes.Size = new Size(231, (40 * cont));
+                            panelReportes.Size = new Size(231, (55 * cont));
                         }
                     break;
                     case 2:
                         if (cont > 0)
-                            panelCaptura.Size = new Size(231, (40 * cont));
+                            panelCaptura.Size = new Size(231, (55 * cont));
                         break;
                     case 3:
                         if (cont > 0)
-                            panelProgramas.Size = new Size(231, (40 * cont)) ;
+                            panelProgramas.Size = new Size(231, (55 * cont)) ;
                         break;
                     default: break;
                 }

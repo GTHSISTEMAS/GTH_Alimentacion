@@ -34,9 +34,15 @@ namespace Alimentacion
             this.dgv_Mermas = new System.Windows.Forms.DataGridView();
             this.panelBarraTitulo = new System.Windows.Forms.Panel();
             this.btnCerrar = new System.Windows.Forms.PictureBox();
+            this.txtFiltroClave = new System.Windows.Forms.TextBox();
+            this.txtFiltroArticulo = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Mermas)).BeginInit();
             this.panelBarraTitulo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_GuardarMerma
@@ -49,9 +55,9 @@ namespace Alimentacion
             this.btn_GuardarMerma.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_GuardarMerma.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_GuardarMerma.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_GuardarMerma.Location = new System.Drawing.Point(193, 305);
+            this.btn_GuardarMerma.Location = new System.Drawing.Point(193, 378);
             this.btn_GuardarMerma.Name = "btn_GuardarMerma";
-            this.btn_GuardarMerma.Size = new System.Drawing.Size(126, 51);
+            this.btn_GuardarMerma.Size = new System.Drawing.Size(126, 39);
             this.btn_GuardarMerma.TabIndex = 10;
             this.btn_GuardarMerma.Text = "Guardar";
             this.btn_GuardarMerma.UseVisualStyleBackColor = false;
@@ -75,7 +81,7 @@ namespace Alimentacion
             this.dgv_Mermas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgv_Mermas.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgv_Mermas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_Mermas.Location = new System.Drawing.Point(12, 56);
+            this.dgv_Mermas.Location = new System.Drawing.Point(12, 125);
             this.dgv_Mermas.Name = "dgv_Mermas";
             this.dgv_Mermas.ReadOnly = true;
             this.dgv_Mermas.RowHeadersVisible = false;
@@ -108,13 +114,71 @@ namespace Alimentacion
             this.btnCerrar.TabStop = false;
             this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             // 
+            // txtFiltroClave
+            // 
+            this.txtFiltroClave.Location = new System.Drawing.Point(9, 40);
+            this.txtFiltroClave.Name = "txtFiltroClave";
+            this.txtFiltroClave.Size = new System.Drawing.Size(100, 20);
+            this.txtFiltroClave.TabIndex = 18;
+            this.txtFiltroClave.TextChanged += new System.EventHandler(this.txtFiltroClave_TextChanged);
+            this.txtFiltroClave.MouseDown += new System.Windows.Forms.MouseEventHandler(this.txtFiltroClave_MouseDown);
+            // 
+            // txtFiltroArticulo
+            // 
+            this.txtFiltroArticulo.Location = new System.Drawing.Point(132, 40);
+            this.txtFiltroArticulo.Name = "txtFiltroArticulo";
+            this.txtFiltroArticulo.Size = new System.Drawing.Size(326, 20);
+            this.txtFiltroArticulo.TabIndex = 19;
+            this.txtFiltroArticulo.TextChanged += new System.EventHandler(this.txtFiltroArticulo_TextChanged);
+            this.txtFiltroArticulo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.txtFiltroArticulo_MouseDown);
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(7, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 16);
+            this.label2.TabIndex = 20;
+            this.label2.Text = "Clave :";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(129, 21);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 16);
+            this.label3.TabIndex = 21;
+            this.label3.Text = "Nombre :";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.txtFiltroArticulo);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.txtFiltroClave);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.Location = new System.Drawing.Point(21, 56);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(464, 66);
+            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Filtro";
+            // 
             // Merma
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(98)))), ((int)(((byte)(166)))));
-            this.ClientSize = new System.Drawing.Size(511, 359);
+            this.ClientSize = new System.Drawing.Size(511, 425);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panelBarraTitulo);
             this.Controls.Add(this.dgv_Mermas);
             this.Controls.Add(this.label1);
@@ -131,6 +195,8 @@ namespace Alimentacion
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Mermas)).EndInit();
             this.panelBarraTitulo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnCerrar)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,5 +208,10 @@ namespace Alimentacion
         private System.Windows.Forms.DataGridView dgv_Mermas;
         private System.Windows.Forms.Panel panelBarraTitulo;
         private System.Windows.Forms.PictureBox btnCerrar;
+        private System.Windows.Forms.TextBox txtFiltroClave;
+        private System.Windows.Forms.TextBox txtFiltroArticulo;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

@@ -1076,9 +1076,9 @@ namespace Alimentacion
                 + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                 + " FROM( "
                 + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
-                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
                 + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                 + " FROM racion "
@@ -1086,8 +1086,8 @@ namespace Alimentacion
                 + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                 + " GROUP BY ran_id, ing_descripcion "
                 + " ) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc , pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc , pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                 + " GROUP BY T.Ran, T.Clave, T.Ing "
                 + " UNION "
                 + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -1191,9 +1191,9 @@ namespace Alimentacion
                 + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                 + " FROM( "
                 + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
-                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
                 + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                 + " FROM racion "
@@ -1201,8 +1201,8 @@ namespace Alimentacion
                 + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                 + " GROUP BY ran_id, ing_descripcion "
                 + " ) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                 + " GROUP BY T.Ran, T.Clave, T.Ing "
                 + " UNION "
                 + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -1806,17 +1806,45 @@ namespace Alimentacion
                     }
 
                     query = "INSERT INTO porcentaje_Premezcla "
-                        + "SELECT T1.Pmz, T1.Clave, T1.Ing, (T1.Peso / T2.Peso)  "
-                        + " FROM( "
-                        + "  SELECT pmez_racion AS Pmz, ing_clave AS Clave, ing_nombre AS Ing, SUM(pmez_peso) AS Peso "
-                        + " FROM premezcla "
-                        + " WHERE pmez_racion LIKE '" + premezcla + "' AND pmez_fecha >= '" + fini.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
-                        + " GROUP BY pmez_racion, ing_clave, ing_nombre) T1 "
-                        + " LEFT JOIN( "
-                        + " SELECT pmez_racion AS Pmz, SUM(pmez_peso) AS Peso "
-                        + " FROM premezcla "
-                        + " WHERE pmez_racion LIKE '" + premezcla + "' AND pmez_fecha >= '" + fini.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
-                        + " GROUP BY pmez_racion )T2 ON T1.Pmz = T2.Pmz";
+                   + " SELECT T1.Pmz, T1.Clave, T1.Ing, (T1.Peso / T2.Peso) , SEC2.Peso / SEC.Peso"
+                   + " FROM( "
+                   + " SELECT pmez_racion AS Pmz, ing_clave AS Clave, ing_nombre AS Ing, SUM(pmez_peso) AS Peso "
+                   + " FROM premezcla "
+                   + " WHERE pmez_racion LIKE '" + premezcla + "' AND pmez_fecha >= '" + fini.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                   + " GROUP BY pmez_racion, ing_clave, ing_nombre) T1 "
+                   + " LEFT JOIN( "
+                   + " SELECT pmez_racion AS Pmz, SUM(pmez_peso) AS Peso "
+                   + " FROM premezcla "
+                   + " WHERE pmez_racion LIKE '" + premezcla + "' AND pmez_fecha >= '" + fini.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                   + " GROUP BY pmez_racion )T2 ON T1.Pmz = T2.Pmz" + @"
+                    LEFT JOIN(
+                                        SELECT rac_descripcion AS Pmez, SUM(rac_ms) AS Peso
+
+                                        FROM racion
+
+                                        WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                        AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                        AND rac_descripcion LIKE '" + premezcla + @"'
+
+                                        GROUP BY rac_descripcion
+                                )
+
+                                        SEC ON SEC.Pmez = T1.Pmz
+                                LEFT JOIN(
+                                        SELECT rac_descripcion AS Pmez, ing_clave AS Clave, SUM(rac_ms) AS Peso
+                                            FROM racion
+                                            WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                            AND rac_fecha< '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                            AND rac_descripcion LIKE '" + premezcla + @"'
+
+                                        GROUP BY rac_descripcion, ing_clave
+                                )
+                                SEC2 ON SEC2.Clave = T1.Clave";
+
                     conn.InsertSelecttAlimento(query);
                 }
             }
@@ -1833,7 +1861,7 @@ namespace Alimentacion
                 DataTable dt, dtAux;
                 DataTable dt1 = new DataTable();
                 string pmz, clave, ingrediente, valores = "", prmz, query;
-                double porcentaje;
+                double porcentaje,porcentajesecas;
                 int repeticiones = 0;
                 prmz = premezcla[2].ToString() + premezcla[3];
                 query = "SELECT * FROM porcentaje_Premezcla WHERE pmez_descripcion like '" + premezcla + "'";
@@ -1843,22 +1871,62 @@ namespace Alimentacion
                 {
                     if (prmz == "01")
                     {
-                        query = "SELECT T1.Pmz, T1.Clave, T1.Ing, T1.Peso / T2.Total "  
-                        + " FROM( "
-                        + " select T.pmez_racion AS Pmz, T.ing_clave AS Clave, T.ing_nombre AS Ing, SUM(T.pmez_peso) AS Peso "
-                        + " FROM( "
-                        + " SELECT DISTINCT * "
-                        + " from premezcla "
-                        + " where pmez_racion LIKE '" + premezcla + "' "
-                        + " AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm")+ "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "') T "
-                        + " GROUP BY pmez_racion, ing_clave, ing_nombre ) T1 "
-                        + " LEFT JOIN( "
-                        + " SELECT T.pmez_racion AS Pmz, SUM(T.pmez_peso) AS Total "
-                        + " FROM( "
-                        + " SELECT DISTINCT * FROM premezcla "
-                        + " WHERE pmez_racion LIKE '" + premezcla + "' "
-                        + " AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "') T "
-                        + " GROUP BY T.pmez_racion) T2 ON T1.Pmz = T2.Pmz";
+                        query = @"SELECT
+	                                   T1.Pmz
+                                      ,T1.Clave
+                                      ,T1.Ing
+	                                  ,T1.Peso / T2.Total
+	                                  ,SEC2.Peso / SEC.Peso
+                                FROM 
+                                (
+	                                SELECT  T.pmez_racion    AS Pmz
+	                                       ,T.ing_clave      AS Clave
+	                                       ,T.ing_nombre     AS Ing
+	                                       ,SUM(T.pmez_peso) AS Peso
+	                                FROM 
+	                                (
+		                                SELECT  DISTINCT *
+		                                FROM premezcla
+		                                WHERE pmez_racion  LIKE '" + premezcla + @"'
+                                        AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+                                        AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+	                                ) T
+	                                GROUP BY  pmez_racion
+	                                         ,ing_clave
+	                                         ,ing_nombre 
+                                ) T1
+                                LEFT JOIN 
+                                (
+	                                SELECT  T.pmez_racion    AS Pmz
+	                                       ,SUM(T.pmez_peso) AS Total
+	                                FROM 
+	                                (
+		                                SELECT  DISTINCT *
+		                                FROM premezcla
+		                                WHERE pmez_racion  LIKE '" + premezcla + @"'
+                                        AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+                                        AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+	                                ) T
+		                                GROUP BY  T.pmez_racion
+                                )       T2 ON T1.Pmz = T2.Pmz
+                                LEFT JOIN( 
+		                                SELECT rac_descripcion AS Pmez, SUM(rac_ms) AS Peso 
+		                                FROM racion 
+		                                WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                AND rac_fecha  < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                AND rac_descripcion LIKE '" + premezcla + @"' 
+		                                GROUP BY rac_descripcion
+                                )
+		                                SEC ON SEC.Pmez = T1.Pmz
+                                LEFT JOIN( 
+		                                SELECT rac_descripcion AS Pmez, ing_clave AS Clave, SUM(rac_ms) AS Peso 
+			                                FROM racion 
+			                                WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                    AND rac_fecha  < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                    AND rac_descripcion LIKE '" + premezcla + @"' 
+		                                GROUP BY rac_descripcion, ing_clave
+                                )
+                                SEC2 ON SEC2.Clave = T1.Clave";
                         conn.QueryAlimento(query, out dt);
 
                         for (int i = 0; i < dt.Rows.Count; i++)
@@ -1867,7 +1935,8 @@ namespace Alimentacion
                             clave = dt.Rows[i][1].ToString();
                             ingrediente = dt.Rows[i][2].ToString();
                             porcentaje = Convert.ToDouble(dt.Rows[i][3]);
-                            valores += "('" + pmz + "','" + clave + "','" + ingrediente + "'," + porcentaje + "),";
+                            porcentajesecas = Convert.ToDouble(dt.Rows[i][4]);
+                            valores += "('" + pmz + "','" + clave + "','" + ingrediente + "'," + porcentaje + "," + porcentajesecas + "),";
                         }
                         if (valores.Length > 0)
                         {
@@ -1955,20 +2024,20 @@ namespace Alimentacion
                         }
 
                         query = "INSERT INTO porcentaje_Premezcla "
-                           + " SELECT T1.Pmez, T1.Clave, T1.Ing, T1.Peso / T2.Peso "
-                            + " FROM( "
-                            + " SELECT rac_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, SUM(rac_mh) AS Peso "
-                            + " FROM racion "
-                            + " WHERE rac_fecha >= '" + fpmI.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
-                            + " AND rac_descripcion LIKE '" + premezcla + "' "
-                            + " GROUP BY rac_descripcion, ing_clave, ing_descripcion)T1 "
-                            + " LEFT JOIN( "
-                            + " SELECT rac_descripcion AS Pmez, SUM(rac_mh) AS Peso "
-                            + " FROM racion "
-                            + " WHERE rac_fecha >= '" + fpmI.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
-                            + " AND rac_descripcion LIKE '" + premezcla + "' "
-                            + " GROUP BY rac_descripcion "
-                            + " ) T2 ON T1.Pmez = T2.Pmez ";
+                    + " SELECT T1.Pmez, T1.Clave, T1.Ing, T1.Peso / T2.Peso , T1.PesoSeco / T2.PesoSeco "
+                     + " FROM( "
+                     + " SELECT rac_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, SUM(rac_mh) AS Peso , SUM(rac_ms) AS PesoSeco "
+                     + " FROM racion "
+                     + " WHERE rac_fecha >= '" + fpmI.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                     + " AND rac_descripcion LIKE '" + premezcla + "' "
+                     + " GROUP BY rac_descripcion, ing_clave, ing_descripcion)T1 "
+                     + " LEFT JOIN( "
+                     + " SELECT rac_descripcion AS Pmez, SUM(rac_mh) AS Peso , SUM(rac_ms) AS PesoSeco"
+                     + " FROM racion "
+                     + " WHERE rac_fecha >= '" + fpmI.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                     + " AND rac_descripcion LIKE '" + premezcla + "' "
+                     + " GROUP BY rac_descripcion"
+                     + " ) T2 ON T1.Pmez = T2.Pmez";
                         conn.InsertSelecttAlimento(query);
                     }
                 }
@@ -2134,9 +2203,9 @@ namespace Alimentacion
                     + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                     + " FROM( "
                     + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                    + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                    + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                     + " FROM( "
-                    + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                    + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                     + " FROM( "
                     + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                     + " FROM racion "
@@ -2144,8 +2213,8 @@ namespace Alimentacion
                     + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                     + " GROUP BY ran_id, ing_descripcion "
                     + " ) T1 "
-                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                     + " GROUP BY T.Ran, T.Clave, T.Ing "
                     + " UNION "
                     + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -2264,9 +2333,9 @@ namespace Alimentacion
                 + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                 + " FROM( "
                 + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
-                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
                 + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                 + " FROM racion "
@@ -2274,8 +2343,8 @@ namespace Alimentacion
                 + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                 + " GROUP BY ran_id, ing_descripcion "
                 + " ) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                 + " GROUP BY T.Ran, T.Clave, T.Ing "
                 + " UNION "
                 + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -2341,9 +2410,9 @@ namespace Alimentacion
                 + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                 + " FROM( "
                 + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
-                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
                 + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                 + " FROM racion "
@@ -2351,8 +2420,8 @@ namespace Alimentacion
                 + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                 + " GROUP BY ran_id, ing_descripcion "
                 + " ) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc , pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc , pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                 + " GROUP BY T.Ran, T.Clave, T.Ing "
                 + " UNION "
                 + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -2452,9 +2521,9 @@ namespace Alimentacion
                 + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                 + " FROM( "
                 + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
-                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
                 + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                 + " FROM racion "
@@ -2462,8 +2531,8 @@ namespace Alimentacion
                 + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                 + " GROUP BY ran_id, ing_descripcion "
                 + " ) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                 + " GROUP BY T.Ran, T.Clave, T.Ing "
                 + " UNION "
                 + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -2563,9 +2632,9 @@ namespace Alimentacion
                 + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                 + " FROM( "
                 + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
-                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                 + " FROM( "
                 + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                 + " FROM racion "
@@ -2573,8 +2642,8 @@ namespace Alimentacion
                 + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                 + " GROUP BY ran_id, ing_descripcion "
                 + " ) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc,pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc,pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                 + " GROUP BY T.Ran, T.Clave, T.Ing "
                 + " UNION "
                 + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -2659,9 +2728,9 @@ namespace Alimentacion
                     + " SELECT T.Ran, T.Clave, T.Ing, SUM(T.Peso), SUM(T.PesoS) "
                     + " FROM( "
                     + " SELECT T1.Ran, IIF(T2.Pmez IS NULL, T1.Clave, T2.Clave) AS Clave, IIF(T2.Pmez IS NULL, T1.Ing, T2.Ing) AS Ing, IIF(T2.Pmez IS NULL, T1.Peso, T1.Peso * T2.Porc) AS Peso, "
-                    + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.Porc) AS PesoS "
+                    + " IIF(T2.Pmez IS NULL, T1.PesoS, T1.PesoS * T2.PorcSeca) AS PesoS "
                     + " FROM( "
-                    + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.Porc) AS PesoS "
+                    + " SELECT T1.Ran, T2.Clave, T2.Ing, (T1.Peso * T2.Porc) AS Peso, (T1.PesoS * T2.PorcSeca) AS PesoS "
                     + " FROM( "
                     + " SELECT ran_id As Ran, ing_descripcion AS Pmz, SUM(rac_mh) AS Peso, SUM(rac_ms) AS PesoS "
                     + " FROM racion "
@@ -2669,8 +2738,8 @@ namespace Alimentacion
                     + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
                     + " GROUP BY ran_id, ing_descripcion "
                     + " ) T1 "
-                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc,pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+                    + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc,pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
                     + " GROUP BY T.Ran, T.Clave, T.Ing "
                     + " UNION "
                     + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh), SUM(rac_ms) "
@@ -2905,8 +2974,8 @@ namespace Alimentacion
             + " WHERE ran_id IN(" + ranNumero + ")  AND rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "'  AND etp_id IN(" + etapa + ") "
             + " AND ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) IN('00', '01', '02') "
             + " GROUP BY ran_id, ing_descripcion) T1 "
-            + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
-            + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
+            + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Pmz = T2.Pmez) T1 "
+            + " LEFT JOIN(SELECT pmez_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, pmez_porcentaje AS Porc, pmez_porcentaje_seca as PorcSeca FROM porcentaje_Premezcla)T2 ON T1.Ing = T2.Pmez) T "
             + " GROUP BY T.Ran, T.Clave, T.Ing "
             + " UNION "
             + " SELECT ran_id, ing_clave, ing_descripcion, SUM(rac_mh) "

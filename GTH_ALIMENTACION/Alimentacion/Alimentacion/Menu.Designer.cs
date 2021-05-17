@@ -168,6 +168,10 @@
             this.botGenT5 = new System.Windows.Forms.Button();
             this.panelT5Dgv = new System.Windows.Forms.Panel();
             this.dgvT5 = new System.Windows.Forms.DataGridView();
+            this.panelBtnProyeccion = new System.Windows.Forms.Panel();
+            this.panel39 = new System.Windows.Forms.Panel();
+            this.btnProyeccion = new System.Windows.Forms.Button();
+            this.panel43 = new System.Windows.Forms.Panel();
             this.panelBarraTitulo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximizar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimizar)).BeginInit();
@@ -243,6 +247,8 @@
             this.panelAll.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvT5)).BeginInit();
+            this.panelBtnProyeccion.SuspendLayout();
+            this.panel39.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelBarraTitulo
@@ -334,7 +340,7 @@
             this.panelBtnConfiguracion.Controls.Add(this.panelBtnConfig);
             this.panelBtnConfiguracion.Controls.Add(this.panel22);
             this.panelBtnConfiguracion.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnConfiguracion.Location = new System.Drawing.Point(0, 899);
+            this.panelBtnConfiguracion.Location = new System.Drawing.Point(0, 978);
             this.panelBtnConfiguracion.Name = "panelBtnConfiguracion";
             this.panelBtnConfiguracion.Size = new System.Drawing.Size(231, 45);
             this.panelBtnConfiguracion.TabIndex = 18;
@@ -388,7 +394,7 @@
             this.panelBtnCorteManual.Controls.Add(this.button4);
             this.panelBtnCorteManual.Controls.Add(this.panel5);
             this.panelBtnCorteManual.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnCorteManual.Location = new System.Drawing.Point(0, 854);
+            this.panelBtnCorteManual.Location = new System.Drawing.Point(0, 933);
             this.panelBtnCorteManual.Name = "panelBtnCorteManual";
             this.panelBtnCorteManual.Size = new System.Drawing.Size(231, 45);
             this.panelBtnCorteManual.TabIndex = 17;
@@ -432,7 +438,7 @@
             this.panelProgramas.Controls.Add(this.panelBtnExportar);
             this.panelProgramas.Controls.Add(this.panelBtnProrrateo);
             this.panelProgramas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelProgramas.Location = new System.Drawing.Point(0, 532);
+            this.panelProgramas.Location = new System.Drawing.Point(0, 611);
             this.panelProgramas.Name = "panelProgramas";
             this.panelProgramas.Size = new System.Drawing.Size(231, 322);
             this.panelProgramas.TabIndex = 16;
@@ -807,7 +813,7 @@
             this.panelBtnProgramas.Controls.Add(this.panelBtnPrograms);
             this.panelBtnProgramas.Controls.Add(this.panel3);
             this.panelBtnProgramas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnProgramas.Location = new System.Drawing.Point(0, 487);
+            this.panelBtnProgramas.Location = new System.Drawing.Point(0, 566);
             this.panelBtnProgramas.Name = "panelBtnProgramas";
             this.panelBtnProgramas.Size = new System.Drawing.Size(231, 45);
             this.panelBtnProgramas.TabIndex = 15;
@@ -855,7 +861,7 @@
             this.panelCaptura.Controls.Add(this.panelNC);
             this.panelCaptura.Controls.Add(this.panelBtnCD);
             this.panelCaptura.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelCaptura.Location = new System.Drawing.Point(0, 365);
+            this.panelCaptura.Location = new System.Drawing.Point(0, 444);
             this.panelCaptura.Name = "panelCaptura";
             this.panelCaptura.Size = new System.Drawing.Size(231, 122);
             this.panelCaptura.TabIndex = 14;
@@ -1006,7 +1012,7 @@
             this.panelBtnCaptura.Controls.Add(this.panelBtnCap);
             this.panelBtnCaptura.Controls.Add(this.panel2);
             this.panelBtnCaptura.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnCaptura.Location = new System.Drawing.Point(0, 320);
+            this.panelBtnCaptura.Location = new System.Drawing.Point(0, 399);
             this.panelBtnCaptura.Name = "panelBtnCaptura";
             this.panelBtnCaptura.Size = new System.Drawing.Size(231, 45);
             this.panelBtnCaptura.TabIndex = 13;
@@ -1050,6 +1056,7 @@
             // 
             // panelReportes
             // 
+            this.panelReportes.Controls.Add(this.panelBtnProyeccion);
             this.panelReportes.Controls.Add(this.panelRDE);
             this.panelReportes.Controls.Add(this.panelCI);
             this.panelReportes.Controls.Add(this.panelBtnRC);
@@ -1057,7 +1064,7 @@
             this.panelReportes.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelReportes.Location = new System.Drawing.Point(0, 195);
             this.panelReportes.Name = "panelReportes";
-            this.panelReportes.Size = new System.Drawing.Size(231, 125);
+            this.panelReportes.Size = new System.Drawing.Size(231, 204);
             this.panelReportes.TabIndex = 12;
             // 
             // panelRDE
@@ -1809,6 +1816,53 @@
             this.dgvT5.Size = new System.Drawing.Size(344, 243);
             this.dgvT5.TabIndex = 0;
             // 
+            // panelBtnProyeccion
+            // 
+            this.panelBtnProyeccion.Controls.Add(this.panel39);
+            this.panelBtnProyeccion.Controls.Add(this.panel43);
+            this.panelBtnProyeccion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelBtnProyeccion.Location = new System.Drawing.Point(0, 160);
+            this.panelBtnProyeccion.Name = "panelBtnProyeccion";
+            this.panelBtnProyeccion.Size = new System.Drawing.Size(231, 40);
+            this.panelBtnProyeccion.TabIndex = 7;
+            // 
+            // panel39
+            // 
+            this.panel39.Controls.Add(this.btnProyeccion);
+            this.panel39.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel39.Location = new System.Drawing.Point(20, 0);
+            this.panel39.Name = "panel39";
+            this.panel39.Size = new System.Drawing.Size(211, 40);
+            this.panel39.TabIndex = 1;
+            // 
+            // btnProyeccion
+            // 
+            this.btnProyeccion.BackColor = System.Drawing.Color.White;
+            this.btnProyeccion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnProyeccion.FlatAppearance.BorderSize = 0;
+            this.btnProyeccion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.btnProyeccion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProyeccion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnProyeccion.ForeColor = System.Drawing.Color.Black;
+            this.btnProyeccion.Image = global::Alimentacion.Properties.Resources.Reporte;
+            this.btnProyeccion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnProyeccion.Location = new System.Drawing.Point(0, 0);
+            this.btnProyeccion.Name = "btnProyeccion";
+            this.btnProyeccion.Size = new System.Drawing.Size(211, 40);
+            this.btnProyeccion.TabIndex = 3;
+            this.btnProyeccion.Text = "Proyección";
+            this.btnProyeccion.UseVisualStyleBackColor = false;
+            this.btnProyeccion.Click += new System.EventHandler(this.btnProyeccion_Click);
+            // 
+            // panel43
+            // 
+            this.panel43.BackColor = System.Drawing.Color.White;
+            this.panel43.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel43.Location = new System.Drawing.Point(0, 0);
+            this.panel43.Name = "panel43";
+            this.panel43.Size = new System.Drawing.Size(20, 40);
+            this.panel43.TabIndex = 0;
+            // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1902,6 +1956,8 @@
             this.panelAll.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvT5)).EndInit();
+            this.panelBtnProyeccion.ResumeLayout(false);
+            this.panel39.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2041,5 +2097,9 @@
         private System.Windows.Forms.Panel panelBtnVtaRacion;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Panel panel36;
+        private System.Windows.Forms.Panel panelBtnProyeccion;
+        private System.Windows.Forms.Panel panel39;
+        private System.Windows.Forms.Button btnProyeccion;
+        private System.Windows.Forms.Panel panel43;
     }
 }

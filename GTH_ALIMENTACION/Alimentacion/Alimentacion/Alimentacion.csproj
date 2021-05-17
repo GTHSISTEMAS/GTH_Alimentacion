@@ -56,45 +56,47 @@
     </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient, Version=6.3.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\VentaGanadoFueraAFII\VentaGanadoFueraAFII\bin\Debug\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="ght001717">
-      <HintPath>..\..\..\..\..\lgomez\Documents\Proyectos\GTH_SCALE\GTH_SCALE\bin\Debug\ght001717.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\ght001717.dll</HintPath>
     </Reference>
     <Reference Include="ght001720">
-      <HintPath>..\..\..\..\..\lgomez\Documents\Proyectos\GTH_DB_COSTOS\GTH_DB_COSTOS\bin\Debug\ght001720.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\ght001720.dll</HintPath>
     </Reference>
     <Reference Include="ght001721, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Documents\dlls\ght001721x\ght001721.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Desktop\Nueva carpeta (3)\ght001721x\ght001721.dll</HintPath>
     </Reference>
-    <Reference Include="ght001746, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Users\GTH\Downloads\ght001746q\ght001746q\ght001746.dll</HintPath>
+    <Reference Include="ght001746">
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\ght001746.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1449.0\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common.resources, Version=15.0.0.0, Culture=en, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Desktop\Mapeo\Mapeo\bin\Debug\Microsoft.ReportViewer.Common.resources.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Desktop\GTHCASAS\SIO\SioPresentacion\SiO\DemoNuevoSio\DemoNuevoSio\bin\Debug\Microsoft.ReportViewer.Common.resources.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1449.0\lib\net40\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.DataVisualization.resources, Version=15.0.0.0, Culture=en, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Desktop\Mapeo\Mapeo\bin\Debug\Microsoft.ReportViewer.DataVisualization.resources.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Desktop\GTHCASAS\SIO\SioPresentacion\SiO\DemoNuevoSio\DemoNuevoSio\bin\Debug\Microsoft.ReportViewer.DataVisualization.resources.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Design, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.Winforms.150.1449.0\lib\net40\Microsoft.ReportViewer.Design.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Design.resources, Version=15.0.0.0, Culture=en, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Desktop\Mapeo\Mapeo\bin\Debug\Microsoft.ReportViewer.Design.resources.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Desktop\GTHCASAS\SIO\SioPresentacion\SiO\DemoNuevoSio\DemoNuevoSio\bin\Debug\Microsoft.ReportViewer.Design.resources.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.WebDesign, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.WebForms.150.1449.0\lib\net40\Microsoft.ReportViewer.WebDesign.dll</HintPath>
@@ -107,7 +109,7 @@
     </Reference>
     <Reference Include="Microsoft.ReportViewer.WinForms.resources, Version=15.0.0.0, Culture=en, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Desktop\Mapeo\Mapeo\bin\Debug\Microsoft.ReportViewer.WinForms.resources.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Desktop\REPORT VIEWER\Microsoft.ReportViewer.WinForms.resources.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
@@ -117,7 +119,7 @@
       <HintPath>..\..\..\..\..\lgomez\Documents\Proyectos\GTH_SCALE_REPORTS_V3\GTH_SCALE_REPORTS_V3\bin\Debug\Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\VentaGanadoFueraAFII\VentaGanadoFueraAFII\bin\Debug\MySql.Data.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
@@ -127,11 +129,11 @@
     </Reference>
     <Reference Include="Progress.Messages, Version=11.7.0.1388, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Users\GTH\Downloads\ght001746q\ght001746q\Progress.Messages.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\Progress.Messages.dll</HintPath>
     </Reference>
     <Reference Include="Progress.o4glrt, Version=11.7.0.1388, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Users\GTH\Downloads\ght001746q\ght001746q\Progress.o4glrt.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Users\GTH\Downloads\GTH_Alimentacion-main\GTH_Alimentacion-main\Alimentacion\Alimentacion\bin\Debug\Progress.o4glrt.dll</HintPath>
     </Reference>
     <Reference Include="SqlServerSpatial.Toolkit, Version=1.0.2.39392, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SqlServerSpatial.Toolkit.1.0.3\lib\net45\SqlServerSpatial.Toolkit.dll</HintPath>
@@ -277,6 +279,12 @@
     </Compile>
     <Compile Include="Prorrateo.Designer.cs">
       <DependentUpon>Prorrateo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProyeccionINg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProyeccionINg.Designer.cs">
+      <DependentUpon>ProyeccionINg.cs</DependentUpon>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Tipificaciones.cs">
@@ -425,6 +433,11 @@
     <EmbeddedResource Include="Prorrateo.resx">
       <DependentUpon>Prorrateo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProyeccionINg.resx">
+      <DependentUpon>ProyeccionINg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporte_Ingredientes.rdlc" />
+    <EmbeddedResource Include="Reporte_Proyeccion.rdlc" />
     <EmbeddedResource Include="Report_p_Corral1A.rdlc" />
     <EmbeddedResource Include="Report_p_Corral2A.rdlc" />
     <EmbeddedResource Include="Report_p_Corral3A.rdlc" />
@@ -448,7 +461,6 @@
     <EmbeddedResource Include="Reporte_Empresa.resx">
       <DependentUpon>Reporte_Empresa.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reporte_Ingredientes.rdlc" />
     <EmbeddedResource Include="ReportF.rdlc" />
     <EmbeddedResource Include="ReportF3.rdlc" />
     <EmbeddedResource Include="ReportF2.rdlc" />
@@ -468,6 +480,7 @@
     <None Include="DS_Dia_Empresa.xss">
       <DependentUpon>DS_Dia_Empresa.xsd</DependentUpon>
     </None>
+    <Fakes Include="Fakes\Microsoft.ReportViewer.Design.resources.fakes" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
