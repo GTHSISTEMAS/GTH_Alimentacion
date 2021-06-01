@@ -608,10 +608,22 @@ namespace Alimentacion
 
 
             //Seleccionamos los alamecene en caso de cada rancho
-            string queryALM = "SELECT alm_id "
-                      + " FROM[DBSIE].[dbo].almacen "
-                      + " WHERE alm_tipo IN(2, 3) AND ran_id IN(" + ran_numero + ")";
-            conn.QueryAlimento(queryALM, out dtAlmacenes);
+
+            if (ran_id == 36 || ran_id == 38)
+            {
+
+
+                string queryALM = "SELECT alm_id "
+                          + " FROM[DBSIE].[dbo].almacen "
+                          + " WHERE alm_tipo IN(2, 3) AND ran_id IN(" + ran_numero + ")";
+                conn.QueryAlimento(queryALM, out dtAlmacenes);
+            } else
+            {
+                string queryALM = "SELECT alm_id "
+                          + " FROM[DBSIE].[dbo].almacen "
+                          + " WHERE alm_tipo IN(2, 3) AND emp_id IN(" + emp_id + ")";
+                conn.QueryAlimento(queryALM, out dtAlmacenes);
+            }
 
             // Verificamos que el check de empresa este Check para sacar el reporte o en todo caso eliminar los almacenes no correspondientes al establo
             if (!cbEmpresa.Checked)

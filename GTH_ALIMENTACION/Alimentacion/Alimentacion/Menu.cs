@@ -130,7 +130,7 @@ namespace Alimentacion
                 button14.Cursor = Cursors.Hand;
                 button15.Cursor = Cursors.Hand;
                 button16.Cursor = Cursors.Hand;
-                button17.Cursor = Cursors.Hand;
+                //button17.Cursor = Cursors.Hand;
                 button18.Cursor = Cursors.Hand;
                 button19.Cursor = Cursors.Hand;
                 //button20.Cursor = Cursors.Hand;
@@ -426,24 +426,50 @@ namespace Alimentacion
             panelConfig.Visible = false;
             this.Size = new Size(804, 544);
         }
-
+   
         private void button13_Click(object sender, EventArgs e)
         {
+            menu = true;
+            panelContenedor.Visible = false;
+            panelConfig.Visible = true;
+            pictureBox2.Visible = false;
             menu = false;
             pictureBox2.Visible = true;
             bconfig = false;
+
             //Prorrateo
             openChildFormPanel(new Prorrateo(emp_id, emp_nombre, ran_id, ran_nombre));
+            FormCollection fc = Application.OpenForms;
             panelContenedor.Visible = true;
-            panelConfig.Visible = false;
-            //this.Size = new Size(1220, 800);
-            this.Size = new Size(1300, 750);
-            //Console.WriteLine(panelConfig.Size.ToString());
-            this.MaximumSize = SystemInformation.PrimaryMonitorMaximizedWindowSize;
-            this.WindowState = FormWindowState.Maximized;
-            PanelSize();
-            btnRestaurar.Visible = true;
-            btnMaximizar.Visible = false;
+            bool ProrrateroOpen = false;
+
+            foreach (Form frm in fc)
+            {
+                //iterate through
+                if (frm.Name == "Prorrateo")
+                {
+                    ProrrateroOpen = true;
+                } 
+            }
+            
+            if(ProrrateroOpen)
+            {
+                panelConfig.Visible = false;
+                //this.Size = new Size(1220, 800);
+                this.Size = new Size(1300, 750);
+                //Console.WriteLine(panelConfig.Size.ToString());
+                this.MaximumSize = SystemInformation.PrimaryMonitorMaximizedWindowSize;
+                this.WindowState = FormWindowState.Maximized;
+                PanelSize();
+                btnRestaurar.Visible = true;
+                btnMaximizar.Visible = false;
+            } else
+            {
+                menu = true;
+                panelContenedor.Visible = false;
+                panelConfig.Visible = true;
+                pictureBox2.Visible = false;
+            }
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -576,18 +602,13 @@ namespace Alimentacion
                 Form2 f2 = new Form2();
                 if (f2.ShowDialog() == DialogResult.OK)
                 {
-                    if (f2.Vpwd)
-                    {
+                    
                         openChildFormPanel(new Configuraciones(ran_id, ran_nombre));
                         panelConfig.Visible = false;
                         panelContenedor.Visible = true;
                         this.Size = new Size(910, 610);
                         bconfig = true;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Contraseña Invalida", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }                    
+                                        
                 }                
             }
 
@@ -600,7 +621,7 @@ namespace Alimentacion
 
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
-        private void pictureBox2_Click(object sender, EventArgs e)
+        public void pictureBox2_Click(object sender, EventArgs e)
         {
             menu = true;
             panelContenedor.Visible = false;
@@ -1387,6 +1408,80 @@ namespace Alimentacion
             this.Size = new Size(804, 544);
         }
 
+        private void button21_Click(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            Process p = Process.Start("C:\\Movganado\\Procesos\\t1.bat");
+            p.WaitForExit();
+            Cursor = Cursors.Default;
+        }
+
+        private void panelActualizaciones_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+        public void ActualizarFecha()
+        {
+            DataTable dtFechaTracker;
+            string queryFechaTracker = "SELECT 'Informacion del Tracker' AS Descripcion, FORMAT(MAX(rac_fecha), 'dd/MM/yyyy HH:mm', 'es-mx' ) AS Fecha "
+                    + " FROM racion r "
+                    + " WHERE ran_id = " + ran_id.ToString() + " AND ing_polvo = 0 "
+                    + " UNION "
+                    + " SELECT 'Existencia' AS Descripcion, FORMAT(MAX(art.art_fecha), 'dd/MM/yyyy HH:mm', 'es-mx') AS Fecha "
+                    + " FROM articulo art "
+                    + " LEFT JOIN[DBSIE].[dbo].almacen alm ON alm.alm_id = art.alm_id "
+                    + " WHERE alm.ran_id = " + ran_id.ToString()
+                    + " UNION "
+                    + " SELECT 'Bascula' , IIF(ran_bascula = 1, (SELECT FORMAT(MAX(bol_fecha), 'dd/MM/yyyy HH:mm', 'es-mx') "
+                    + " FROM boleto bol LEFT JOIN[DBSIE].[dbo].bascula bal ON bol.bal_clave = bal.bal_clave WHERE bal.ran_id = " + ran_id.ToString() + "), "
+                    + " (SELECT FORMAT(MAX(rac_fecha), 'dd/MM/yyyy HH:mm', 'es-mx') FROM racion where ran_id = " + ran_id.ToString() + ")) AS Fecha "
+                    + " FROM[DBSIO].[dbo].configuracion "
+                    + " WHERE ran_id = " + ran_id.ToString();
+
+            conn.QueryAlimento(queryFechaTracker, out dtFechaTracker);
+
+            label3.Text = Convert.ToDateTime(dtFechaTracker.Rows[0][1]).ToString("dd/MM/yyyy HH:mm");
+
+        }
+
+        ActualizarInformacion actInfo;
+        private void button21_Click_1(object sender, EventArgs e)
+        {
+            ActualizarInformacion f2 = new ActualizarInformacion();
+            if (f2.ShowDialog() == DialogResult.OK)
+            {
+               
+               
+                if(f2.Seleccionador == 1)
+                {
+                    Cursor = Cursors.WaitCursor;
+                    Process p = new Process();
+                    string cadenaExe = ConfigurationManager.AppSettings["ConsumoExe"];
+                    p.StartInfo.FileName = cadenaExe;
+                    p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.RedirectStandardOutput = true;
+                    p.StartInfo.RedirectStandardError = true;
+                    p.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+                    p.Start();
+                    p.BeginOutputReadLine();
+                    p.WaitForExit();
+                    ActualizarFecha();
+                    Cursor = Cursors.Default;
+                } else
+                if (f2.Seleccionador == 2)
+                {
+                    Cursor = Cursors.WaitCursor;
+                    //Process p = Process.Start("C:\\Movganado\\Procesos\\t1.bat");
+                    Process p = Process.Start("C:\\Movganado\\Procesos\\Copia.lnk");
+                    p.WaitForExit();
+                    Cursor = Cursors.Default;
+                }
+
+
+            }
+
+        }
+
         public static void PrintIndexAndValues(IEnumerable myList)
         {
             int i = 0;
@@ -1417,7 +1512,7 @@ namespace Alimentacion
                     case 9: panelBtnExportar.Visible = false; break;
                     case 10: panelBtnCarros.Visible = false; break;
                     case 11: panelBtnMapeo.Visible = false; break;
-                    case 12: panelBtnExtraer.Visible = false; break;
+                    //case 12: panelBtnExtraer.Visible = false; break;
                     case 13: panelBtnInventario.Visible = false; break;
                     case 14: panel1BtnAgrupar.Visible = false; break;
                     case 15: panelBtnCorteManual.Visible = false; break;
@@ -1450,11 +1545,14 @@ namespace Alimentacion
                     break;
                     case 2:
                         if (cont > 0)
-                            panelCaptura.Size = new Size(231, (55 * cont));
+                            panelCaptura.Size = new Size(231, (40 * cont));
                         break;
                     case 3:
                         if (cont > 0)
-                            panelProgramas.Size = new Size(231, (55 * cont)) ;
+                            {
+                                cont = cont - 1;
+                                panelProgramas.Size = new Size(231, (40 * cont));
+                            }
                         break;
                     default: break;
                 }
@@ -1480,7 +1578,7 @@ namespace Alimentacion
             {
                 panelBtnProrrateo.Visible = false;
                 panelBtnExportar.Visible = false;
-                panelProgramas.Size = new Size(231, panelProgramas.Height - 80);
+                panelProgramas.Size = new Size(231, panelProgramas.Height - 40);
             }
         }
         

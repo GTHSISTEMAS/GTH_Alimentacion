@@ -43,6 +43,8 @@ namespace Alimentacion
             dtpInicial.Cursor = Cursors.Hand; 
             fechaMax = MaxDate();
             fechaMin = MinDate();
+            dtpFinal.Value = fechaMax;
+            dtpInicial.Value = DateTime.Parse("1/" +fechaMax.Month+"/"+fechaMax.Year);
             dtpFinal.MaxDate = fechaMax;
             dtpFinal.MinDate = fechaMin;
             dtpInicial.MaxDate = fechaMax;
@@ -547,7 +549,7 @@ namespace Alimentacion
                         + " )T2 ON T1.Ing = T2.Pmz) R) T "
                         + " GROUP BY T.Clave, T.Ingrediente) R "
                         + " WHERE R.INGREDIENTE NOT IN(" + sobrante + ") "
-                        + " GROUP BY R.Clave, R.INGREDIENTE";
+                        + " GROUP BY R.Clave, R.INGREDIENTE ";
 
                         conn.QueryAlimento(query, out dt);
         }

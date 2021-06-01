@@ -59,6 +59,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(460, 400);
             this.panel2.TabIndex = 8;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // dtp
             // 
@@ -102,7 +103,7 @@
             // 
             this.reportViewer1.LocalReport.ReportEmbeddedResource = "Alimentacion.Reporte_Dia_Empresa.rdlc";
             this.reportViewer1.Location = new System.Drawing.Point(0, 0);
-            this.reportViewer1.Name = "ReportViewer";
+            this.reportViewer1.Name = "reportViewer1";
             this.reportViewer1.ServerReport.BearerToken = null;
             this.reportViewer1.Size = new System.Drawing.Size(396, 246);
             this.reportViewer1.TabIndex = 0;

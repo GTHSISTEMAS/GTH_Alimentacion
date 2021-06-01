@@ -159,6 +159,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActualizarInformacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActualizarInformacion.Designer.cs">
+      <DependentUpon>ActualizarInformacion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Autorizar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -287,6 +293,12 @@
       <DependentUpon>ProyeccionINg.cs</DependentUpon>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="CheckTipificaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CheckTipificaciones.Designer.cs">
+      <DependentUpon>CheckTipificaciones.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tipificaciones.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -369,6 +381,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reporte_p_Corral.xsd</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ActualizarInformacion.resx">
+      <DependentUpon>ActualizarInformacion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Autorizar.resx">
       <DependentUpon>Autorizar.cs</DependentUpon>
     </EmbeddedResource>
@@ -442,6 +457,9 @@
     <EmbeddedResource Include="Report_p_Corral2A.rdlc" />
     <EmbeddedResource Include="Report_p_Corral3A.rdlc" />
     <EmbeddedResource Include="Report_p_CorralA.rdlc" />
+    <EmbeddedResource Include="CheckTipificaciones.resx">
+      <DependentUpon>CheckTipificaciones.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tipificaciones.resx">
       <DependentUpon>Tipificaciones.cs</DependentUpon>
     </EmbeddedResource>
@@ -651,6 +669,7 @@
       <Link>SqlServerSpatial.Toolkit\SqlServerSpatial.Toolkit.Viewer.exe</Link>
     </Content>
     <Content Include="Resources\Alimento2.png" />
+    <Content Include="Resources\updated.png" />
     <Content Include="SqlServerSpatial.Toolkit\readme.htm" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

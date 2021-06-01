@@ -622,7 +622,7 @@ namespace Alimentacion
 
                         reportViewer4.LocalReport.Refresh();
                         reportViewer4.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer4, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer4, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
                     }
@@ -640,7 +640,7 @@ namespace Alimentacion
 
                         reportViewer5.LocalReport.Refresh();
                         reportViewer5.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer5, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer5, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
 
@@ -666,7 +666,7 @@ namespace Alimentacion
 
                         reportViewer3.LocalReport.Refresh();
                         reportViewer3.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer3, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer3, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
 
@@ -688,7 +688,7 @@ namespace Alimentacion
 
                         reportViewer2.LocalReport.Refresh();
                         reportViewer2.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer2, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer2, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
 
@@ -720,7 +720,7 @@ namespace Alimentacion
 
                         reportViewer9.LocalReport.Refresh();
                         reportViewer9.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer4, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer4, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
                     }
@@ -738,7 +738,7 @@ namespace Alimentacion
 
                         reportViewer5.LocalReport.Refresh();
                         reportViewer5.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer5, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer5, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
 
@@ -764,7 +764,7 @@ namespace Alimentacion
 
                         reportViewer8.LocalReport.Refresh();
                         reportViewer8.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer8, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer8, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
 
@@ -786,7 +786,7 @@ namespace Alimentacion
 
                         reportViewer7.LocalReport.Refresh();
                         reportViewer7.RefreshReport();
-                        GTHUtils.SavePDF(reportViewer7, ruta + "Auxiliar\\" + num_doc + ".pdf");
+                        GTHUtils.SavePDF(reportViewer7, ruta + "Auxiliar\\0" + num_doc + ".pdf");
                         //Process.Start(ruta + "Auxiliar\\" + num_doc + ".pdf");
                         num_doc++;
 
@@ -807,13 +807,22 @@ namespace Alimentacion
             Cursor = Cursors.Default;
         }
 
+        private int CompareByNumericName(FileInfo firstFile, FileInfo secondFile)
+        {
+
+            int firstFileNumericName = Int32.Parse(firstFile.Name);
+            int secondFileNumericName = Int32.Parse(secondFile.Name);
+
+            return firstFileNumericName.CompareTo(secondFileNumericName);
+        }
+
         private void CombinarArchivos()
         {
             System.IO.DirectoryInfo files = new DirectoryInfo(ruta + "Auxiliar");
             //string[] files = GetFiles();
-
+            var orderedFiles = files.GetFiles().OrderBy(f => f.CreationTime);
             PdfDocument outputDocument = new PdfDocument();
-            foreach (FileInfo file in files.GetFiles())
+            foreach (FileInfo file in orderedFiles)
             {
                 PdfDocument inputDocument = PdfReader.Open(file.FullName, PdfDocumentOpenMode.Import);
                 int count = inputDocument.PageCount;

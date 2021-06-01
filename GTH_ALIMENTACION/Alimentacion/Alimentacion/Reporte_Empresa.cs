@@ -60,6 +60,30 @@ namespace Alimentacion
 
         private void GetInfo(bool origen)
         {
+            //DataTable dt;
+            ////string query = "select rut_ruta from ruta where ran_id = " + ran_id.ToString();
+            ////conn.QuerySIO(query, out dt);
+            ////ruta = dt.Rows[0][0].ToString();
+
+            //// MODIFICADO
+            //string query;
+            //if (origen)
+            //{
+            //    query = "SELECT rut_ruta FROM ruta WHERE rut_desc = 'sio'";
+            //    conn.QueryMovGanado(query, out dt);
+            //}
+            //else
+            //{
+            //    query = "select rut_ruta from ruta where ran_id = " + ran_id.ToString();
+            //    conn.QuerySIO(query, out dt);
+            //}
+            ////---
+            //ruta = dt.Rows[0][0].ToString();
+
+            //DataTable dt1;
+            //query = "SELECT ran_id FROM configuracion where emp_id = " + emp_id.ToString();
+            //conn.QuerySIO(query, out dt1);
+
             DataTable dt;
             //string query = "select rut_ruta from ruta where ran_id = " + ran_id.ToString();
             //conn.QuerySIO(query, out dt);
@@ -69,7 +93,7 @@ namespace Alimentacion
             string query;
             if (origen)
             {
-                query = "SELECT rut_ruta FROM ruta WHERE rut_desc = 'sio'";
+                query = "SELECT rut_ruta FROM ruta WHERE rut_desc = 'alimentacion'";
                 conn.QueryMovGanado(query, out dt);
             }
             else
@@ -98,7 +122,7 @@ namespace Alimentacion
             conn.QuerySIO(query, out dt2);
             emp_codigo = dt2.Rows[0][0].ToString();
         }
-
+            
         private void button1_Click(object sender, EventArgs e)
         {
             //try
@@ -170,6 +194,7 @@ namespace Alimentacion
             Cursor = Cursors.Default;
         }
 
+        DataTable TablaGlobal = new DataTable();
         public void ReporteDE(DateTime dtp)
         {
             try
@@ -195,8 +220,24 @@ namespace Alimentacion
                 TraerInfo(fechaIni.AddYears(-1), fechaFin.AddYears(-1), out dtFinalAnt, out dtInfoDiaAnt, out dec1, out dec2, out dec3);
                 TraerInfo(fechaIni, fechaFin, out dtFinal, out dtInfoDia, out dec1, out dec2, out dec3);
 
+                AddColumnsProduccion(out TablaGlobal);
+                for (int i = 0; i < dtFinal.Rows.Count; i++)
+                {
+                    TablaGlobal.Rows.Add();
+                    for (int j = 0; j < dtFinal.Columns.Count; j++)
+                    {
+                        TablaGlobal.Rows[i][j] = dtFinal.Rows[i][j];
+                    }
+                }
+                //En este apartado se sacan los ponderizados, al compartir el mismo metodo no es posible hacer los cambios dentro del mismo
+                //ya que la información de la hoja uno es distinta de la hoja dos.
+                PonderadosHoja1(dtFinal, fechaIni, fechaFin);
+
+                SacarPonderados(dtInfoDia, fechaIni, fechaFin);
+
                 Diferencia(dtFinalAnt, dtFinal);
-                Diferencia(dtInfoDiaAnt, dtInfoDia);                              
+                Diferencia(dtInfoDiaAnt, dtInfoDia);
+                dtFinal.Rows[32][34] = dtFinal.Rows[32][8];
 
                 string[] meses = new string[] { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
                 ReportParameter[] parameters = new ReportParameter[5];
@@ -890,7 +931,8 @@ namespace Alimentacion
 
         private void Diferencia(DataTable dtFinalAnt, DataTable dtFinal)
         {
-            if (dtFinalAnt.Rows.Count  == dtFinal.Rows.Count)
+
+            if (dtFinalAnt.Rows.Count == dtFinal.Rows.Count)
             {
                 foreach (DataRow dr in dtFinalAnt.Rows)
                 {
@@ -905,49 +947,60 @@ namespace Alimentacion
                 rowP[0] = "DIF %";
                 DataRow rowN = dtFinal.NewRow();
                 rowN[0] = "DIF #";
-                int ultimo, penultimo, cont = 0;
+                int ultimo, penultimo;
+                dtFinal.Rows.Add(rowP);
+                dtFinal.Rows.Add(rowN);
                 string dia;
-
-                for (int i = 0; i < dtFinal.Rows.Count; i++)
-                {
-                    cont = i;
-                    dia = dtFinal.Rows[i][0].ToString();
-                    if (dia == "NA")
-                        break;
-                }
-
-                ultimo = cont == dtFinal.Rows.Count - 1 ? 33: cont - 1;
-                penultimo = cont == dtFinal.Rows.Count - 1 ? 32 : ultimo - 1;
 
                 for (int i = 1; i < dtFinal.Columns.Count; i++)
                 {
-                    double act = dtFinal.Rows[penultimo][i].ToString() == "" ? 0 : Convert.ToDouble(dtFinal.Rows[penultimo][i]);
-                    double ant = dtFinal.Rows[ultimo][i].ToString() == "" ? 0 : Convert.ToDouble(dtFinal.Rows[ultimo][i]);
-                    double rest = act - ant;
-                    rowN[i] = rest;
-                    double porc = rest != 0  && act > 0 ? (rest / act) * 100 : 0;
-                    rowP[i] = porc;
+                    if (dtFinal.Rows[32][i] == DBNull.Value || Convert.ToString(dtFinal.Rows[32][i]) == "NaN") { dtFinal.Rows[35][i] = dtFinal.Rows[33][i]; }
+                    else
+                    {
+                        if (dtFinal.Rows[33][i] == DBNull.Value || Convert.ToDouble(dtFinal.Rows[32][i]) == 0 || Convert.ToString(dtFinal.Rows[33][i]) == "NaN")//En caso de tener valor preguntamos si el del año pasado tiene valor, si es nulo no hace nada 
+                        {
+
+                        }
+                        else//Pero si tiene valor hacemos ambas diferencias.
+                        {
+                            //dtH1.Rows[34][i] = ((Convert.ToDecimal(dtH1.Rows[33][i]) / Convert.ToDecimal(dtH1.Rows[32][i])) - 1) * -100;
+                            //dtH1.Rows[35][i] = (Convert.ToDecimal(dtH1.Rows[32][i]) - Convert.ToDecimal(dtH1.Rows[33][i])) * 1;
+                            dtFinal.Rows[34][i] = ((Convert.ToDouble(dtFinal.Rows[33][i]) / Convert.ToDouble(dtFinal.Rows[32][i])) - 1) * -100;
+                            dtFinal.Rows[35][i] = (Convert.ToDouble(dtFinal.Rows[32][i]) - Convert.ToDouble(dtFinal.Rows[33][i])) * 1;
+                        }
+                    }
                 }
-                dtFinal.Rows.Add(rowP);
-                dtFinal.Rows.Add(rowN);
-            }
-            else
-            {
-                DataRow row = dtFinal.NewRow();
-                row["DIA"] = "X";
-                dtFinal.Rows.Add(row);
 
-                row = dtFinal.NewRow();
-                row["DIA"] = "X";
-                dtFinal.Rows.Add(row);
+                //    ultimo = cont == dtFinal.Rows.Count - 1 ? 33 : cont - 1;
+                //    penultimo = cont == dtFinal.Rows.Count - 1 ? 32 : ultimo - 1;
 
-                row = dtFinal.NewRow();
-                row["DIA"] = "X";
-                dtFinal.Rows.Add(row);
+                //    for (int i = 1; i < dtFinal.Columns.Count; i++)
+                //    {
+                //        double act = dtFinal.Rows[penultimo][i].ToString() == "" ? 0 : Convert.ToDouble(dtFinal.Rows[penultimo][i]);
+                //        double ant = dtFinal.Rows[ultimo][i].ToString() == "" ? 0 : Convert.ToDouble(dtFinal.Rows[ultimo][i]);
+                //        double rest = act - ant;
+                //        rowN[i] = rest;
+                //        double porc = rest != 0 && act > 0 ? (rest / act) * 100 : 0;
+                //        rowP[i] = porc;
+                //    }
+                //    dtFinal.Rows.Add(rowP);
+                //    dtFinal.Rows.Add(rowN);
+                //}
+                //else
+                //{
+                //    DataRow row = dtFinal.NewRow();
+                //    row["DIA"] = "X";
+                //    dtFinal.Rows.Add(row);
+
+                //    row = dtFinal.NewRow();
+                //    row["DIA"] = "X";
+                //    dtFinal.Rows.Add(row);
+
+                //    row = dtFinal.NewRow();
+                //    row["DIA"] = "X";
+                //    dtFinal.Rows.Add(row);
             }
         }
-       
-
         private void Hora_Corte(out int horas, out int hcorte)
         {
             DataTable dt;
@@ -2587,11 +2640,11 @@ namespace Alimentacion
             dt.Columns.Add("precprod").DataType = System.Type.GetType("System.Double");
             dt.Columns.Add("precmsprod").DataType = System.Type.GetType("System.Double");
         }
-        
+
         private void FillDTFinal(int dias, DataTable dtIndicadores, DataTable dtIL, out DataTable dtFinal)
         {
             AddColumnsProduccion(out dtFinal);
-            if(dtIndicadores.Rows.Count == 0 || dtIL.Rows.Count == 0)
+            if (dtIndicadores.Rows.Count == 0 || dtIL.Rows.Count == 0)
             {
                 for (int i = 0; i < dias; i++)
                 {
@@ -2632,56 +2685,56 @@ namespace Alimentacion
                     dr["PORCS"] = 0;
                     dr["PRECIOPROD"] = 0;
                     dr["PRECIOMS"] = 0;
-                    
+
                     dtFinal.Rows.Add(dr);
-                    
+
                 }
             }
             else if (dtIndicadores.Rows.Count == dtIL.Rows.Count)
             {
                 for (int i = 0; i < dtIL.Rows.Count; i++)
                 {
-                    double sa = Convert.ToDouble(dtIndicadores.Rows[i][12]);
-                    double mh = Convert.ToDouble(dtIndicadores.Rows[i][9]);
-                    double leche = Convert.ToDouble(dtIL.Rows[i][14]);
-                    double ord = Convert.ToDouble(dtIL.Rows[i][2]);
+                    double sa = dtIndicadores.Rows[i][12] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][12]) : 0;
+                    double mh = dtIndicadores.Rows[i][9] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][9]) : 0;
+                    double leche = dtIL.Rows[i][14] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][14]) : 0;
+                    double ord = dtIL.Rows[i][2] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][2]) : 0;
                     DataRow dr = dtFinal.NewRow();
                     //Venta
                     dr["DIA"] = dtIL.Rows[i][0].ToString();
                     dr["TOTALVTA"] = dtIL.Rows[i][1] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][1]) : 0;
-                    dr["ORDENO"] = dtIL.Rows[i][2] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][2]): 0;
-                    dr["SECAS"] = dtIL.Rows[i][3] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][3]):0;
-                    dr["HATO"] = dtIL.Rows[i][4] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][4]) :0;
+                    dr["ORDENO"] = dtIL.Rows[i][2] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][2]) : 0;
+                    dr["SECAS"] = dtIL.Rows[i][3] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][3]) : 0;
+                    dr["HATO"] = dtIL.Rows[i][4] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][4]) : 0;
                     dr["PORCLACT"] = dtIL.Rows[i][5] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][5]) : 0;
                     dr["PORCPROT"] = dtIL.Rows[i][6] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][6]) : 0;
                     dr["UREA"] = dtIL.Rows[i][7] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][7]) : 0;
-                    dr["PORCGRA"] = dtIL.Rows[i][8] != DBNull.Value ?  Convert.ToDouble(dtIL.Rows[i][8]) :0;
+                    dr["PORCGRA"] = dtIL.Rows[i][8] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][8]) : 0;
                     dr["CCS"] = dtIL.Rows[i][9] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][9]) : 0;
-                    dr["CTD"] = dtIL.Rows[i][10] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][10]) :0;
+                    dr["CTD"] = dtIL.Rows[i][10] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][10]) : 0;
                     //PROD
                     dr["LECHE"] = dtIL.Rows[i][11] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][11]) : 0;
                     dr["ANTIB"] = dtIL.Rows[i][12] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][12]) : 0;
-                    dr["X"] = ord > 0 ? leche / ord :0;
-                    dr["TOTALPROD"] = dtIL.Rows[i][14] != DBNull.Value ?  Convert.ToDouble(dtIL.Rows[i][14]) :0;
-                    dr["DEL"] = dtIL.Rows[i][15] != DBNull.Value ?  Convert.ToDouble(dtIL.Rows[i][15]) :0;
+                    dr["X"] = ord > 0 ? leche / ord : 0;
+                    dr["TOTALPROD"] = dtIL.Rows[i][14] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][14]) : 0;
+                    dr["DEL"] = dtIL.Rows[i][15] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][15]) : 0;
                     dr["ANT"] = dtIL.Rows[i][16] != DBNull.Value ? Convert.ToDouble(dtIL.Rows[i][16]) : 0;
                     //Venta
                     dr["ILCAVTA"] = dtIndicadores.Rows[i][3] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][3]) : 0;
-                    dr["ICVTA"] = dtIndicadores.Rows[i][4] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][4]):0;
+                    dr["ICVTA"] = dtIndicadores.Rows[i][4] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][4]) : 0;
                     //Alimentacion Produccion
-                    dr["EA"] = dtIndicadores.Rows[i][5] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][5]) : 0;
-                    dr["ILCAPROD"] = dtIndicadores.Rows[i][6] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][6]) :0;
+                    dr["EA"] = dtIndicadores.Rows[i][5] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][5]) : 0;
+                    dr["ILCAPROD"] = dtIndicadores.Rows[i][6] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][6]) : 0;
                     dr["ICPROD"] = dtIndicadores.Rows[i][7] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][7]) : 0;
-                    dr["PRECIOL"] = dtIndicadores.Rows[i][8] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][8]) : 0;
-                    dr["MH"] = dtIndicadores.Rows[i][9] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][9]) : 0;
-                    dr["PORCMS"] = dtIndicadores.Rows[i][10] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][10]) : 0;
-                    dr["MS"] = dtIndicadores.Rows[i][11] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][11]) :0;
-                    dr["SA"] = dtIndicadores.Rows[i][12] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][12]) : 0;
-                    dr["MSS"] = dtIndicadores.Rows[i][13] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][13]) :0;
-                    dr["EAS"] = dtIndicadores.Rows[i][14] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][14]) :0 ;
-                    dr["PORCS"] = sa >  0 && mh > 0 ? Convert.ToDouble(sa / mh * 100) : 0;
-                    dr["PRECIOPROD"] = dtIndicadores.Rows[i][15] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][15])> 0 ? Convert.ToDouble(dtIndicadores.Rows[i][15]) : 0 : 0;
-                    dr["PRECIOMS"] = dtIndicadores.Rows[i][16] != DBNull.Value ?  Convert.ToDouble(dtIndicadores.Rows[i][16]): 0;
+                    dr["PRECIOL"] = dtIndicadores.Rows[i][8] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][8]) : 0;
+                    dr["MH"] = dtIndicadores.Rows[i][9] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][9]) : 0;
+                    dr["PORCMS"] = dtIndicadores.Rows[i][10] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][10]) : 0;
+                    dr["MS"] = dtIndicadores.Rows[i][11] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][11]) : 0;
+                    dr["SA"] = dtIndicadores.Rows[i][12] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][12]) : 0;
+                    dr["MSS"] = dtIndicadores.Rows[i][13] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][13]) : 0;
+                    dr["EAS"] = dtIndicadores.Rows[i][14] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][14]) : 0;
+                    dr["PORCS"] = sa > 0 && mh > 0 ? Convert.ToDouble(sa / mh * 100) : 0;
+                    dr["PRECIOPROD"] = dtIndicadores.Rows[i][15] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][15]) > 0 ? Convert.ToDouble(dtIndicadores.Rows[i][15]) : 0 : 0;
+                    dr["PRECIOMS"] = dtIndicadores.Rows[i][16] != DBNull.Value ? Convert.ToDouble(dtIndicadores.Rows[i][16]) : 0;
 
                     dtFinal.Rows.Add(dr);
                 }
@@ -2723,18 +2776,10 @@ namespace Alimentacion
                             for (int i = 0; i < faltantes.Count; i++)
                             {
                                 dia = Convert.ToInt32(faltantes[i]);
-                               
-                                    if (dia > max)
-                                    {
-                                        if (dia == dias)
-                                        {
-                                        
-                                        } else
-                                        {
-                                            list2.Add(dia);
-                                        }
-                                           
-                                    }
+                                if (dia > max)
+                                {
+                                    list2.Add(dia);
+                                }
                             }
                             for (int i = 0; i < list2.Count; i++)
                             {
@@ -2757,7 +2802,7 @@ namespace Alimentacion
                     }
                 }
             }
-           
+
         }
 
         private void FillEmptyDT(int dias, DataTable dt)
@@ -2772,6 +2817,399 @@ namespace Alimentacion
                 }
                 dt.Rows.Add(dr);
             }
+        }
+
+        private void SacarPonderados(DataTable InfoHojaDos, DateTime fechaIni, DateTime fechaFin)
+        {
+            int hcorte = 0;
+            int horas;
+            Hora_Corte(out horas, out hcorte);
+            DateTime fechaI, fechaF;
+            DataTable _PrecioLeche;
+            string _Fecha = "";
+            double _IT = 0, _PondeTablas = 0;
+            double[] _SumatoriaPreciosxInventario = { 0, 0, 0, 0, 0, 0, 0 };
+            double _Aux1 = 0, _Aux2 = 0;
+            //Se sacan las sumatorias de los inventarios 
+            if (TablaGlobal.Rows[31][2] == DBNull.Value) { TablaGlobal.Rows[31][2] = 0; }
+            if (InfoHojaDos.Rows[31][3] == DBNull.Value) { InfoHojaDos.Rows[31][3] = 0; }
+            if (InfoHojaDos.Rows[31][10] == DBNull.Value) { InfoHojaDos.Rows[31][10] = 0; }
+            if (InfoHojaDos.Rows[31][17] == DBNull.Value) { InfoHojaDos.Rows[31][17] = 0; }
+            if (InfoHojaDos.Rows[31][24] == DBNull.Value) { InfoHojaDos.Rows[31][24] = 0; }
+            if (InfoHojaDos.Rows[31][34] == DBNull.Value) { InfoHojaDos.Rows[31][34] = 0; }
+            _PondeTablas = Convert.ToDouble(TablaGlobal.Rows[31][2]) + Convert.ToDouble(InfoHojaDos.Rows[31][3]) + Convert.ToDouble(InfoHojaDos.Rows[31][10]) + Convert.ToDouble(InfoHojaDos.Rows[31][17]) + Convert.ToDouble(InfoHojaDos.Rows[31][24]) + Convert.ToDouble(InfoHojaDos.Rows[31][34]);
+            for (int i = 0; i < 31; i++)
+            {
+                //Sacamos la sumatoria del ordeño por el precio
+                if (TablaGlobal.Rows[i][2] != DBNull.Value && TablaGlobal.Rows[i][31] != DBNull.Value)
+                {
+
+                    _SumatoriaPreciosxInventario[0] += Convert.ToDouble(Convert.ToDouble(TablaGlobal.Rows[i][2])) * Convert.ToDouble(Convert.ToDouble(TablaGlobal.Rows[i][31]));
+                }
+            }
+            fechaI = hcorte == 24 || hcorte == 0 ? new DateTime(fechaFin.Year, dtp.Value.Date.Month, 1) : fechaIni.AddDays(1);
+            fechaF = hcorte == 24 || hcorte == 0 ? new DateTime(fechaFin.Year, dtp.Value.Date.Month, dtp.Value.Date.Day) : fechaFin;
+            string query = "SELECT SUM(RESULTADO.muliplicacion) AS RESULTADO "
+                            + "FROM( "
+                            + "SELECT TOTAL.med_fecha, (TOTAL.LecheTotal * TOTAL.LECHE_POND) AS muliplicacion "
+                            + "FROM( "
+                            + "SELECT LECHEPOND.med_fecha, SUM(LECHEPOND.PRECIOLECHE) AS LECHE_POND, LECHEPOND.LecheTotal "
+                            + "FROM( "
+                            + " SELECT  LECHEPORDIA.ran_id "
+                            + ", LECHEPORDIA.med_fecha "
+                            + ", LECHEPORDIA.LecheDia "
+                            + ", LECHEPORDIA.med_precioleche "
+                            + ", SUMATORIA.LecheTotal "
+                            + ", (LECHEPORDIA.LecheDia / SUMATORIA.LecheTotal) * LECHEPORDIA.med_precioleche AS PRECIOLECHE "
+                            + " FROM( "
+                            + " SELECT  ran_id, med_fecha, SUM(med_lecfederal) + SUM(med_lecproduc) AS LecheDia, med_precioleche"
+                            + " FROM media"
+                            + " WHERE med_fecha BETWEEN '" + fechaI.ToString("yyyy-MM-dd") + "' AND '" + fechaF.ToString("yyyy-MM-dd") + "' " + "AND ran_id IN (" + ranNumero + ") "
+                            + " GROUP BY  ran_id, med_fecha, med_precioleche) LECHEPORDIA "
+                            + " LEFT JOIN( "
+                            + " SELECT  med_fecha , SUM(med_lecfederal) AS Lechefederal, SUM(med_lecproduc) AS LecheProdu, SUM(med_lecfederal) + SUM(med_lecproduc) AS LecheTotal "
+                            + " FROM media"
+                            + " WHERE med_fecha BETWEEN '" + fechaI.ToString("yyyy-MM-dd") + "' AND '" + fechaF.ToString("yyyy-MM-dd") + "' " + "AND ran_id IN (" + ranNumero + ") "
+                            + " GROUP BY  med_fecha "
+                            + " ) SUMATORIA ON SUMATORIA.med_fecha = LECHEPORDIA.med_fecha "
+                            + " )LECHEPOND "
+                            + " GROUP BY LECHEPOND.med_fecha, LECHEPOND.LecheTotal) TOTAL"
+                            + ") RESULTADO";
+            conn.QueryAlimento(query, out _PrecioLeche);
+
+
+
+            for (int i = 1; i < 50; i++)
+            {
+                int _seguro = 0, _contador = 0;
+                double _Ponderizado = 0;
+                for (int j = 0; j <= 30; j++)
+                {
+                    if (InfoHojaDos.Rows[j][i] == DBNull.Value) { /*_contador++; */}
+                    else
+                    {
+                        if (_seguro == 0)
+                        {
+                            InfoHojaDos.Rows[32][i] = 0;
+                            _seguro = 1;
+                        }
+                        if (i == 1 || i == 3 || i == 10 || i == 17 || i == 24 || i == 34)
+                        {
+                            InfoHojaDos.Rows[32][i] = Convert.ToInt32(InfoHojaDos.Rows[32][i]) + Convert.ToInt32(InfoHojaDos.Rows[j][i]);
+                            _contador++;
+                        }
+                        else
+                        {
+                            // Sacamos los valores ponderizados
+                            if (InfoHojaDos.Rows[j][1] != DBNull.Value && i == 2)
+                            {
+                                _Ponderizado += Convert.ToDouble(InfoHojaDos.Rows[j][i]) * Convert.ToDouble(InfoHojaDos.Rows[j][1]);
+                            }
+                            if (InfoHojaDos.Rows[j][3] != DBNull.Value && i >= 4 && i <= 8)
+                            {
+                                _Ponderizado += Convert.ToDouble(InfoHojaDos.Rows[j][i]) * Convert.ToDouble(InfoHojaDos.Rows[j][3]);
+                            }
+                            if (InfoHojaDos.Rows[j][10] != DBNull.Value && i >= 11 && i <= 15)
+                            {
+                                _Ponderizado += Convert.ToDouble(InfoHojaDos.Rows[j][i]) * Convert.ToDouble(InfoHojaDos.Rows[j][10]);
+                            }
+                            if (InfoHojaDos.Rows[j][17] != DBNull.Value && i >= 18 && i <= 22)
+                            {
+                                _Ponderizado += Convert.ToDouble(InfoHojaDos.Rows[j][i]) * Convert.ToDouble(InfoHojaDos.Rows[j][17]);
+                            }
+                            if (InfoHojaDos.Rows[j][24] != DBNull.Value && i >= 25 && i <= 32)
+                            {
+                                _Ponderizado += Convert.ToDouble(InfoHojaDos.Rows[j][i]) * Convert.ToDouble(InfoHojaDos.Rows[j][24]);
+                            }
+                            if (InfoHojaDos.Rows[j][34] != DBNull.Value && i >= 35 && i <= 42)
+                            {
+                                _Ponderizado += Convert.ToDouble(InfoHojaDos.Rows[j][i]) * Convert.ToDouble(InfoHojaDos.Rows[j][34]);
+                            }
+                            //Si no es necesario sacar el valor ponderizado simplimente se saca el valor promedio 
+                            InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][i]) + Convert.ToDouble(InfoHojaDos.Rows[j][i]);
+                            _contador++;
+                        }
+                    }
+                }
+                if (InfoHojaDos.Rows[32][i] == DBNull.Value) { }
+                else
+                {
+                    if (i == 1 || i == 3 || i == 10 || i == 17 || i == 24 || i == 34)
+                    {
+                        InfoHojaDos.Rows[32][i] = Decimal.Round(Convert.ToInt32(InfoHojaDos.Rows[32][i]) / _contador);
+                    }
+                    else
+                    {
+                        if (i == 47)
+                        {
+                            //Tomamos la sumatoria del valor IT 
+                            _IT = Convert.ToDouble(InfoHojaDos.Rows[32][47]);
+                        }
+                        InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][i]) / _contador;
+
+                        if (i == 2)
+                        {
+                            InfoHojaDos.Rows[32][i] = _Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][1]);
+                        }
+                        if (i >= 4 && i <= 8)
+                        {
+                            //Guardamos el valor de la sumatoria del precio 2/7
+                            if (i == 5) { _SumatoriaPreciosxInventario[1] = _Ponderizado; }
+                            if (i == 7) { InfoHojaDos.Rows[32][6] = ((_Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][3])) / Convert.ToDouble(InfoHojaDos.Rows[32][4])) * 100; }
+                            InfoHojaDos.Rows[32][i] = _Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][3]);
+                            if (i == 8) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][5]) / Convert.ToDouble(InfoHojaDos.Rows[32][7]); }
+                        }
+                        if (i >= 11 && i <= 15)
+                        {
+                            //Guardamos el valor de la sumatoria del precio 2/13
+                            if (i == 12) { _SumatoriaPreciosxInventario[2] = _Ponderizado; }
+                            if (i == 14) { InfoHojaDos.Rows[32][13] = ((_Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][10])) / Convert.ToDouble(InfoHojaDos.Rows[32][11])) * 100; }
+                            InfoHojaDos.Rows[32][i] = _Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][10]);
+                            if (i == 15) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][12]) / Convert.ToDouble(InfoHojaDos.Rows[32][14]); }
+                        }
+                        if (i >= 18 && i <= 22)
+                        {
+                            //Guardamos el valor de la sumatoria del precio de 13 o más 
+                            if (i == 19) { _SumatoriaPreciosxInventario[3] = _Ponderizado; }
+                            if (i == 21) { InfoHojaDos.Rows[32][20] = ((_Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][17])) / Convert.ToDouble(InfoHojaDos.Rows[32][18])) * 100; }
+                            InfoHojaDos.Rows[32][i] = _Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][17]);
+                            if (i == 22) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][19]) / Convert.ToDouble(InfoHojaDos.Rows[32][21]); }
+                        }
+                        if (i >= 25 && i <= 32)
+                        {
+                            //Guardamos el valor de la sumatoria de secas
+                            if (i == 31) { _SumatoriaPreciosxInventario[4] = _Ponderizado; }
+                            InfoHojaDos.Rows[32][i] = _Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][24]);
+                            if (i == 27) { InfoHojaDos.Rows[32][26] = ((_Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][24])) / Convert.ToDouble(InfoHojaDos.Rows[32][25])) * 100; }
+                            if (i == 25) { _Aux1 = Convert.ToDouble(InfoHojaDos.Rows[32][i]); }
+                            if (i == 28) { _Aux2 = Convert.ToDouble(InfoHojaDos.Rows[32][i]); }
+                            if (i == 30) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][28]) / Convert.ToDouble(InfoHojaDos.Rows[32][25]); }
+                            if (i == 32) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][31]) / Convert.ToDouble(InfoHojaDos.Rows[32][29]); }
+                        }
+                        if (i >= 35 && i <= 42)
+                        {
+                            //Guardamos el valor de la sumatoria del reto
+                            if (i == 41) { _SumatoriaPreciosxInventario[5] = _Ponderizado; }
+                            InfoHojaDos.Rows[32][i] = _Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][34]);
+                            if (i == 37) { InfoHojaDos.Rows[32][36] = ((_Ponderizado / Convert.ToDouble(InfoHojaDos.Rows[31][34])) / Convert.ToDouble(InfoHojaDos.Rows[32][35])) * 100; }
+                            if (i == 35) { _Aux1 = Convert.ToDouble(InfoHojaDos.Rows[32][i]); }
+                            if (i == 38) { _Aux2 = Convert.ToDouble(InfoHojaDos.Rows[32][i]); }
+                            if (i == 40) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][38]) / Convert.ToDouble(InfoHojaDos.Rows[32][35]); }
+                            if (i == 42) { InfoHojaDos.Rows[32][i] = Convert.ToDouble(InfoHojaDos.Rows[32][41]) / Convert.ToDouble(InfoHojaDos.Rows[32][39]); }
+                        }
+                        if (i == 30 || i == 40)
+                        {
+                            InfoHojaDos.Rows[32][i] = (_Aux2 / _Aux1) * 100;
+                        }
+                    }
+                }
+            }
+            _SumatoriaPreciosxInventario[6] = _SumatoriaPreciosxInventario[5] + _SumatoriaPreciosxInventario[4] + _SumatoriaPreciosxInventario[3] +
+                                  _SumatoriaPreciosxInventario[2] + _SumatoriaPreciosxInventario[1] + _SumatoriaPreciosxInventario[0];
+            InfoHojaDos.Rows[32][44] = _IT != 0 ? Convert.ToDouble(_PrecioLeche.Rows[0][0]) / _IT : 0;
+            InfoHojaDos.Rows[32][45] = _SumatoriaPreciosxInventario[6] / _PondeTablas;
+            InfoHojaDos.Rows[32][46] = (Convert.ToDouble(InfoHojaDos.Rows[32][45]) / Convert.ToDouble(InfoHojaDos.Rows[32][44])) * 100;
+            InfoHojaDos.Rows[32][48] = Convert.ToDouble(InfoHojaDos.Rows[32][44]) - Convert.ToDouble(InfoHojaDos.Rows[32][45]);
+            InfoHojaDos.Rows[32][49] = (Convert.ToDouble(InfoHojaDos.Rows[32][48]) / Convert.ToDouble(InfoHojaDos.Rows[32][44])) * 100;
+            //Se validan que no den valores negativos
+            InfoHojaDos.Rows[32][49] = Convert.ToDouble(InfoHojaDos.Rows[32][49]) <= 0 ? DBNull.Value : InfoHojaDos.Rows[32][49];
+            InfoHojaDos.Rows[32][48] = Convert.ToDouble(InfoHojaDos.Rows[32][48]) <= 0 ? DBNull.Value : InfoHojaDos.Rows[32][48];
+            InfoHojaDos.Rows[32][46] = Convert.ToDouble(InfoHojaDos.Rows[32][46]) <= 0 ? DBNull.Value : InfoHojaDos.Rows[32][46];
+            InfoHojaDos.Rows[32][45] = Convert.ToDouble(InfoHojaDos.Rows[32][45]) <= 0 ? DBNull.Value : InfoHojaDos.Rows[32][45];
+            InfoHojaDos.Rows[32][44] = Convert.ToDouble(InfoHojaDos.Rows[32][44]) <= 0 ? DBNull.Value : InfoHojaDos.Rows[32][44];
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void PonderadosHoja1(DataTable dtHoja1, DateTime fechaIni, DateTime fechaFin)
+        {
+            int hcorte = 0;
+            int horas;
+            Hora_Corte(out horas, out hcorte);
+            DateTime fechaI, fechaF;
+            fechaI = hcorte == 24 || hcorte == 0 ? new DateTime(fechaFin.Year, dtp.Value.Date.Month, 1) : fechaIni.AddDays(1);
+            fechaF = hcorte == 24 || hcorte == 0 ? new DateTime(fechaFin.Year, dtp.Value.Date.Month, dtp.Value.Date.Day) : fechaFin;
+            DataTable DtPrecioLeche;
+            string query = "SELECT DAY(LECHEPOND.med_fecha), SUM(LECHEPOND.PRECIOLECHE) AS LECHE_POND, LECHEPOND.LecheTotal "
+                            + " FROM("
+                            + "SELECT  LECHEPORDIA.ran_id,LECHEPORDIA.med_fecha,LECHEPORDIA.LecheDia,LECHEPORDIA.med_precioleche,SUMATORIA.LecheTotal,(LECHEPORDIA.LecheDia/SUMATORIA.LecheTotal) * LECHEPORDIA.med_precioleche AS PRECIOLECHE FROM ("
+                            + "SELECT  ran_id,med_fecha,SUM(med_lecfederal) + SUM(med_lecproduc) AS LecheDia,med_precioleche FROM media "
+                                                        + " WHERE med_fecha BETWEEN '" + fechaI.ToString("yyyy-MM-dd") + "' AND '" + fechaF.ToString("yyyy-MM-dd") + "' " + "AND ran_id IN (" + ranNumero + ") "
+                            + " GROUP BY  ran_id, med_fecha, med_precioleche) LECHEPORDIA "
+                            + " LEFT JOIN( "
+                            + " SELECT  med_fecha , SUM(med_lecfederal) AS Lechefederal, SUM(med_lecproduc) AS LecheProdu, SUM(med_lecfederal) + SUM(med_lecproduc) AS LecheTotal "
+                            + " FROM media"
+                            + " WHERE med_fecha BETWEEN '" + fechaI.ToString("yyyy-MM-dd") + "' AND '" + fechaF.ToString("yyyy-MM-dd") + "' " + "AND ran_id IN (" + ranNumero + ") "
+                            + " GROUP BY  med_fecha "
+                            + " ) SUMATORIA ON SUMATORIA.med_fecha = LECHEPORDIA.med_fecha "
+                            + " )LECHEPOND "
+                            + " GROUP BY LECHEPOND.med_fecha, LECHEPOND.LecheTotal "
+                            + " ORDER BY LECHEPOND.med_fecha";
+            conn.QueryAlimento(query, out DtPrecioLeche);
+            SacarEspaciosVacios(DtPrecioLeche);
+            // arreglo con valores para las ponderaciones 
+            //0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13
+            double[] Acumulador = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            /*
+            Posicion 0 es la sumatortia del porcentaje de lactancia entre 100 multiplicado por el ordeño 
+            posicion 1 es la sumatortia del porcentaje de la proteina entre 100 multiplicado por el ordeño 
+            posicion 2 es la sumatortia de UERA entre 100 multiplicado por el ordeño
+            posicion 3 es la sumatortia de la grasa entre 100 multiplicado por el ordeño
+            posicion 4 es la sumatortia del CCS entre 100 multiplicado por el ordeño
+            posicion 5 es la sumatortia del CDT entre 100 multiplicado por el ordeño
+            posicion 5 es la sumatortia del CDT entre 100 multiplicado por el ordeño
+            posicion 6 es la sumatoria del total entre el ordeño todo multiplicado por el precio de la leche 
+            posicion 7 es un contador para saber si hay valores en el día actual 
+            posicion 8 es una sumatoria de la porducción 
+            posicion 9 es una sumatoria del valor X
+            posicion 10 es una sumatoria del MS
+            posicion 11 es una sumatoria del valor X multiplicado por el precio de la leche, como el valor de la leche puede cambiar no se usa la posicion 9 
+            posicion 12 es un contador para saber si hay valores en el día actual con respecto al valor X
+            */
+            for (int i = 1; i <= 34; i++)
+            {
+                Acumulador[13] = 0;
+                int _seguro = 0, _contador = 0; //El seguro nos ayuda a identificar si hay un valor, cómo la celda donde esta el resultado tiene un valor nulo
+                //es necesario guardar un número cero para poder hacer la suma, en caso de no contener valores somplemene se queda vacío y no con un cero.
+                for (int j = 0; j <= 30; j++)
+                {
+                    if (dtHoja1.Rows[j][i] == DBNull.Value) { }
+                    else
+                    {
+                        if (_seguro == 0)
+                        {
+                            dtHoja1.Rows[32][i] = 0;
+                            _seguro = 1;
+                        }
+                        dtHoja1.Rows[32][i] = Convert.ToDouble(dtHoja1.Rows[32][i]) + Convert.ToDouble(dtHoja1.Rows[j][i]);
+                        _contador++;//Cada vez que hay un valor no nulo cuenta 
+                        Acumulador[13] += dtHoja1.Rows[j][1] != DBNull.Value ? Convert.ToDouble(Convert.ToDouble(dtHoja1.Rows[j][i])) * Convert.ToDouble(Convert.ToDouble(dtHoja1.Rows[j][1])) : 0;
+                    }
+                }
+                if (dtHoja1.Rows[32][i] == DBNull.Value)//Validamos que no haya un valor nulo, en caso de ser nulo no hace nada 
+                {
+
+                }
+                else//De otro modo hace la operación para sacar el promedio
+                {
+                    if (i == 26)
+                    {
+                        Acumulador[10] = Convert.ToInt32(dtHoja1.Rows[32][i]);
+                    }
+                    if (i == 13)
+                    {
+                        Acumulador[9] = Convert.ToInt32(dtHoja1.Rows[32][i]);
+                    }
+                    if (i == 31)
+                    {
+                        Acumulador[8] = Convert.ToInt32(dtHoja1.Rows[32][i]);
+                    }
+                    dtHoja1.Rows[32][i] = Convert.ToDouble(dtHoja1.Rows[32][i]) / _contador;
+                    if (i >= 24 && i <= 32)
+                    {
+
+                        dtHoja1.Rows[32][i] = Acumulador[13] / Convert.ToDouble(dtHoja1.Rows[31][1]);
+                    }
+                }
+            }
+            // una vez sacado los promedios susituimos los valores en los promedio que no estan ponderizados 
+            for (int i = 0; i < 31; i++)
+            {
+                // en este ciclo de días revisamos si hay valores en las celdas que nos importan, de ser así tomamos los datos y se hace el ponderizado 
+                if (dtHoja1.Rows[i][5] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[0] = ((Convert.ToDouble(dtHoja1.Rows[i][5]) / 100) * Convert.ToDouble(dtHoja1.Rows[i][1])) + Acumulador[0];
+                }
+                if (dtHoja1.Rows[i][6] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[1] = ((Convert.ToDouble(dtHoja1.Rows[i][6]) / 100) * Convert.ToDouble(dtHoja1.Rows[i][1])) + Acumulador[1];
+                }
+                if (dtHoja1.Rows[i][7] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[2] = ((Convert.ToDouble(dtHoja1.Rows[i][7]) / 100) * Convert.ToDouble(dtHoja1.Rows[i][1])) + Acumulador[2];
+                }
+                if (dtHoja1.Rows[i][8] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[3] = ((Convert.ToDouble(dtHoja1.Rows[i][8]) / 100) * Convert.ToDouble(dtHoja1.Rows[i][1])) + Acumulador[3];
+                }
+                if (dtHoja1.Rows[i][9] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[4] = ((Convert.ToDouble(dtHoja1.Rows[i][9]) / 100) * Convert.ToDouble(dtHoja1.Rows[i][1])) + Acumulador[4];
+                }
+                if (dtHoja1.Rows[i][10] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[5] = ((Convert.ToDouble(dtHoja1.Rows[i][10]) / 100) * Convert.ToDouble(dtHoja1.Rows[i][1])) + Acumulador[5];
+                }
+                if (dtHoja1.Rows[i][1] == DBNull.Value || dtHoja1.Rows[i][2] == DBNull.Value || DtPrecioLeche.Rows[i][1] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[6] = Acumulador[6] + ((Convert.ToDouble(dtHoja1.Rows[i][1]) / (Convert.ToDouble(dtHoja1.Rows[i][2]))) * Convert.ToDouble(DtPrecioLeche.Rows[i][1]));
+                    Acumulador[7]++;
+                }
+                if (dtHoja1.Rows[i][13] == DBNull.Value || DtPrecioLeche.Rows[i][1] == DBNull.Value) { }
+                else
+                {
+                    Acumulador[11] = (Convert.ToDouble(dtHoja1.Rows[i][13]) * Convert.ToDouble(DtPrecioLeche.Rows[i][1])) + Acumulador[11];
+                    Acumulador[12]++;
+                }
+            }
+            //Se agregan los nuevos valores ya ponderizados de las tablas.
+            if (Acumulador[8] != 0)
+            {
+                dtHoja1.Rows[32][22] = (Acumulador[9] - Acumulador[8]) / Acumulador[8];
+                dtHoja1.Rows[32][21] = (Acumulador[11] / Acumulador[8]);
+                dtHoja1.Rows[32][18] = (Acumulador[6] / Acumulador[8]);
+            }
+            if (Acumulador[12] != 0) { dtHoja1.Rows[32][22] = (Acumulador[11] - Acumulador[8]) / Acumulador[12]; }
+            if (Acumulador[10] != 0) { dtHoja1.Rows[32][20] = (Acumulador[9] / Acumulador[10]); }
+            if (Acumulador[7] != 0) { dtHoja1.Rows[32][19] = (Acumulador[6] - Acumulador[8]) / Acumulador[7]; }
+            if (dtHoja1.Rows[31][1] != DBNull.Value)
+            {
+                dtHoja1.Rows[32][5] = (Acumulador[0] / (Convert.ToDouble(dtHoja1.Rows[31][1]))) * 100;
+                dtHoja1.Rows[32][6] = (Acumulador[1] / (Convert.ToDouble(dtHoja1.Rows[31][1]))) * 100;
+                dtHoja1.Rows[32][7] = (Acumulador[2] / (Convert.ToDouble(dtHoja1.Rows[31][1]))) * 100;
+                dtHoja1.Rows[32][8] = (Acumulador[3] / (Convert.ToDouble(dtHoja1.Rows[31][1]))) * 100;
+                dtHoja1.Rows[32][9] = (Acumulador[4] / (Convert.ToDouble(dtHoja1.Rows[31][1]))) * 100;
+                dtHoja1.Rows[32][10] = (Acumulador[5] / (Convert.ToDouble(dtHoja1.Rows[31][1]))) * 100;
+            }
+            if (dtHoja1.Rows[32][2] != DBNull.Value)
+            {
+                dtHoja1.Rows[32][13] = dtHoja1.Rows[32][14] != DBNull.Value ? (Convert.ToDouble(dtHoja1.Rows[32][14])) / (Convert.ToDouble(dtHoja1.Rows[32][2])) : 0;
+            }
+        }
+
+          private void SacarEspaciosVacios(DataTable _dt)
+        {
+
+            int _dias, _index;
+            ArrayList _EspacioVacios = new ArrayList();
+            for (int i = 0; i < 31; i++)
+            {
+                _EspacioVacios.Add(i + 1);
+            }
+            for (int i = 0; i < _dt.Rows.Count; i++)
+            {
+                _dias = Convert.ToInt32(_dt.Rows[i][0]);
+                _index = _EspacioVacios.IndexOf(_dias);
+                _EspacioVacios.RemoveAt(_index);
+            }
+            for (int i = 0; i < _EspacioVacios.Count; i++)
+            {
+                DataRow _row = _dt.NewRow();
+                _index = Convert.ToInt32(_EspacioVacios[i]);
+                _row[0] = _index;
+                _dt.Rows.InsertAt(_row, _index - 1);
+            }
+
         }
 
     }

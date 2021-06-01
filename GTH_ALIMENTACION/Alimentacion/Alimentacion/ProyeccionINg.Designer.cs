@@ -34,15 +34,15 @@
             this.reportViewer2 = new Microsoft.Reporting.WinForms.ReportViewer();
             this.cbEmpresa = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.txtDiasProyeccion = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ChBoxForraje = new System.Windows.Forms.CheckBox();
             this.ChBox_Alimento = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
             this.clbRanchos = new System.Windows.Forms.CheckedListBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -127,10 +127,54 @@
             this.panel2.Size = new System.Drawing.Size(472, 390);
             this.panel2.TabIndex = 5;
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(10, 38);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(154, 20);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Fecha Informacion : ";
+            this.label3.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(10, 12);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(183, 20);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Informacion del Tracker :";
+            this.label2.Visible = false;
+            // 
+            // button3
+            // 
+            this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(80)))), ((int)(((byte)(200)))));
+            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(134)))), ((int)(((byte)(223)))));
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.button3.Location = new System.Drawing.Point(342, 12);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(105, 46);
+            this.button3.TabIndex = 13;
+            this.button3.Text = "Actualizar Informacion";
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Visible = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
             // txtDiasProyeccion
             // 
+            this.txtDiasProyeccion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.txtDiasProyeccion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDiasProyeccion.Location = new System.Drawing.Point(169, 206);
+            this.txtDiasProyeccion.Location = new System.Drawing.Point(182, 240);
             this.txtDiasProyeccion.Name = "txtDiasProyeccion";
             this.txtDiasProyeccion.Size = new System.Drawing.Size(100, 26);
             this.txtDiasProyeccion.TabIndex = 12;
@@ -141,7 +185,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(165, 173);
+            this.label1.Location = new System.Drawing.Point(159, 200);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(152, 20);
             this.label1.TabIndex = 11;
@@ -197,49 +241,6 @@
             this.clbRanchos.TabIndex = 7;
             this.clbRanchos.Visible = false;
             this.clbRanchos.SelectedIndexChanged += new System.EventHandler(this.clbRanchos_SelectedIndexChanged);
-            // 
-            // button3
-            // 
-            this.button3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(80)))), ((int)(((byte)(200)))));
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(134)))), ((int)(((byte)(223)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button3.Location = new System.Drawing.Point(342, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(105, 46);
-            this.button3.TabIndex = 13;
-            this.button3.Text = "Actualizar Informacion";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Visible = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click_1);
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(10, 12);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(183, 20);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "Informacion del Tracker :";
-            this.label2.Visible = false;
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(10, 38);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(154, 20);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "Fecha Informacion : ";
-            this.label3.Visible = false;
             // 
             // ProyeccionINg
             // 

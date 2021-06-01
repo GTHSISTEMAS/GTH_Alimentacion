@@ -588,7 +588,7 @@ namespace Alimentacion
                     getInfo();
 
                     DataTable dt;
-                    string q_r = "SELECT rut_ruta FROM ruta WHERE rut_desc = 'sio'";
+                    string q_r = "SELECT rut_ruta FROM ruta WHERE rut_desc = 'alimentacion'";
                     conn.QueryMovGanado(q_r, out dt);
                     ruta = dt.Rows[0][0].ToString();
                     getEstablos(empresa);
@@ -2320,7 +2320,7 @@ namespace Alimentacion
 
             string sob = Sobrantes();
             DataTable dt1;
-            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, SUM(X.PesoS) / SUM(X.PesoH)*100 AS PMS, SUM(X.PesoH) AS PesoH, SUM(X.PesoS) AS PesoS "
+            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, ISNULL(SUM(X.PesoS) / SUM(X.PesoH)*100 , 0 ) AS PMS, SUM(X.PesoH) AS PesoH, ISNULL(SUM(X.PesoS),0)   AS PesoS "
                 + " FROM(  "
                 + " SELECT R.Clave, R.Ing, ISNULL(i.ing_precio_sie, 0) AS Precio, ISNULL(SUM(R.PesoS) / SUM(R.PesoH), 0) AS PMS, SUM(R.PesoH) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoH, "
                 + " SUM(R.PesoS) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoS "
@@ -2397,7 +2397,7 @@ namespace Alimentacion
             int vacas = reportes ? auxh == 0? Animales(campo, inicio, fin.AddDays(-1)) : Animales(campo, inicio.AddDays(1), fin): Animales(campo, tempI, tempF);
             string sob = Sobrantes();
             DataTable dt1;
-            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, SUM(X.PesoS) / SUM(X.PesoH)*100 AS PMS, SUM(X.PesoH) AS PesoH, SUM(X.PesoS) AS PesoS "
+            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio,ISNULL(SUM(X.PesoS) / SUM(X.PesoH)*100 , 0 )    AS PMS, SUM(X.PesoH) AS PesoH, ISNULL(SUM(X.PesoS),0) AS PesoS "
                 + " FROM(  "
                 + " SELECT R.Clave, R.Ing, ISNULL(i.ing_precio_sie, 0) AS Precio, ISNULL(SUM(R.PesoS) / SUM(R.PesoH), 0) AS PMS, SUM(R.PesoH) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoH, "
                 + " SUM(R.PesoS) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoS "
@@ -2508,7 +2508,7 @@ namespace Alimentacion
 
             int vacas = reportes ? auxh == 0 ? Animales(campo, inicio, fin.AddDays(-1)) : Animales(campo, inicio.AddDays(1), fin) : Animales(campo, tempI, tempF);
             DataTable dt1;
-            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, SUM(X.PesoS) / SUM(X.PesoH)*100 AS PMS, SUM(X.PesoH) AS PesoH, SUM(X.PesoS) AS PesoS "
+            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, ISNULL(SUM(X.PesoS) / SUM(X.PesoH)*100 , 0 ) AS PMS, SUM(X.PesoH) AS PesoH, ISNULL(SUM(X.PesoS),0) AS PesoS "
                 + " FROM(  "
                 + " SELECT R.Clave, R.Ing, ISNULL(i.ing_precio_sie, 0) AS Precio, ISNULL(SUM(R.PesoS) / SUM(R.PesoH), 0) AS PMS, SUM(R.PesoH) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoH, "
                 + " SUM(R.PesoS) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoS "
@@ -2619,7 +2619,7 @@ namespace Alimentacion
             int vacas = reportes ? auxh == 0 ? Animales(campo, inicio, fin.AddDays(-1)) : Animales(campo, inicio.AddDays(1), fin) : Animales(campo, tempI, tempF);
             string sob = Sobrantes();
             DataTable dt1;
-            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, SUM(X.PesoS) / SUM(X.PesoH)*100 AS PMS, SUM(X.PesoH) AS PesoH, SUM(X.PesoS) AS PesoS "
+            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, ISNULL(SUM(X.PesoS) / SUM(X.PesoH)*100 , 0 )    AS PMS, SUM(X.PesoH) AS PesoH, ISNULL(SUM(X.PesoS),0)  AS PesoS "
                 + " FROM(  "
                 + " SELECT R.Clave, R.Ing, ISNULL(i.ing_precio_sie, 0) AS Precio, ISNULL(SUM(R.PesoS) / SUM(R.PesoH), 0) AS PMS, SUM(R.PesoH) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoH, "
                 + " SUM(R.PesoS) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoS "
@@ -2715,7 +2715,7 @@ namespace Alimentacion
             int vacas = reportes ? auxh == 0 ? Animales(campo, inicio, fin.AddDays(-1)) : Animales(campo, inicio.AddDays(1), fin) : Animales(campo, tempI, tempF);
             DataTable dt1;
             string sob = Sobrantes();
-            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, SUM(X.PesoS) / SUM(X.PesoH)*100 AS PMS, SUM(X.PesoH) AS PesoH, SUM(X.PesoS) AS PesoS "
+            string query = "SELECT x.Ing, SUM(X.PesoH *X.Precio)/SUM(X.PesoH) AS Precio, ISNULL(SUM(X.PesoS) / SUM(X.PesoH)*100 , 0 ) AS PMS, SUM(X.PesoH) AS PesoH, ISNULL(SUM(X.PesoS),0)  "
                     + " FROM(  "
                     + " SELECT R.Clave, R.Ing, ISNULL(i.ing_precio_sie, 0) AS Precio, ISNULL(SUM(R.PesoS) / SUM(R.PesoH), 0) AS PMS, SUM(R.PesoH) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoH, "
                     + " SUM(R.PesoS) / DATEDIFF(DAY, '" + inicio.ToString("yyyy-MM-dd HH:mm") + "', '" + fin.ToString("yyyy-MM-dd HH:mm") + "')  AS PesoS "

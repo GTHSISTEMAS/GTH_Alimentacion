@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Alimentacion
 {
-    public partial class Tipificaciones : Form
+    public partial class CheckTipificaciones : Form
     {
         ConnSIO conn = new ConnSIO();
         string ran_id;
@@ -24,8 +24,9 @@ namespace Alimentacion
         double porcDif;
         int tipo;
         bool zerotip=false;
+        public bool Vpwd;
 
-        public Tipificaciones(string ran_id, int emp_id, DateTime fechaIni, DateTime fechaFin)
+        public CheckTipificaciones(string ran_id, int emp_id, DateTime fechaIni, DateTime fechaFin)
         {
             InitializeComponent();
             this.ran_id = ran_id;
@@ -35,7 +36,7 @@ namespace Alimentacion
             conn.Iniciar();
         }
 
-        public Tipificaciones(string ran_id, int emp_id, DateTime fechaIni, DateTime fechaFin, DataTable dtAlas, DataTable dtAlfo, int tipo)
+        public CheckTipificaciones(string ran_id, int emp_id, DateTime fechaIni, DateTime fechaFin, DataTable dtAlas, DataTable dtAlfo, int tipo)
         {
             InitializeComponent();
             this.ran_id = ran_id;
@@ -348,6 +349,59 @@ namespace Alimentacion
         public bool ZeroTip
         {
             get => zerotip;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string pwd = textBox1.Text;
+            if (pwd.ToUpper() == "HCC123")
+            {
+                Vpwd = true;
+                DialogResult = DialogResult.OK;
+                
+            }
+            else
+            {
+                MessageBox.Show("Contraseña incorrecta", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+              
+            }
+        }
+
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    if (textBox1.Text.ToUpper() == "HCC123")
+                    {
+                        Vpwd = true;
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.OK;
+                        Vpwd = false;
+                    }
+                  
+                }
+            }
+        }
+
+        private void btnMinimizar_Click(object sender, EventArgs e)
+        {
+                    }
+
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            Vpwd = false;
+            DialogResult = DialogResult.OK;
+           
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

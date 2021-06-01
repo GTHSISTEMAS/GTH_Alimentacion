@@ -61,10 +61,6 @@
             this.panel16 = new System.Windows.Forms.Panel();
             this.button18 = new System.Windows.Forms.Button();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.panelBtnExtraer = new System.Windows.Forms.Panel();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.button17 = new System.Windows.Forms.Button();
-            this.panel14 = new System.Windows.Forms.Panel();
             this.panelBtnMapeo = new System.Windows.Forms.Panel();
             this.panel13 = new System.Windows.Forms.Panel();
             this.button16 = new System.Windows.Forms.Button();
@@ -103,6 +99,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panelReportes = new System.Windows.Forms.Panel();
+            this.panelBtnProyeccion = new System.Windows.Forms.Panel();
+            this.panel39 = new System.Windows.Forms.Panel();
+            this.btnProyeccion = new System.Windows.Forms.Button();
+            this.panel43 = new System.Windows.Forms.Panel();
             this.panelRDE = new System.Windows.Forms.Panel();
             this.panel32 = new System.Windows.Forms.Panel();
             this.button8 = new System.Windows.Forms.Button();
@@ -134,6 +134,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panelActualizaciones = new System.Windows.Forms.Panel();
+            this.panel35 = new System.Windows.Forms.Panel();
+            this.button21 = new System.Windows.Forms.Button();
             this.dgvActualizaciones = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panelAlmacenes = new System.Windows.Forms.Panel();
@@ -168,10 +170,6 @@
             this.botGenT5 = new System.Windows.Forms.Button();
             this.panelT5Dgv = new System.Windows.Forms.Panel();
             this.dgvT5 = new System.Windows.Forms.DataGridView();
-            this.panelBtnProyeccion = new System.Windows.Forms.Panel();
-            this.panel39 = new System.Windows.Forms.Panel();
-            this.btnProyeccion = new System.Windows.Forms.Button();
-            this.panel43 = new System.Windows.Forms.Panel();
             this.panelBarraTitulo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnMaximizar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimizar)).BeginInit();
@@ -188,8 +186,6 @@
             this.panel17.SuspendLayout();
             this.panelBtnInventario.SuspendLayout();
             this.panel16.SuspendLayout();
-            this.panelBtnExtraer.SuspendLayout();
-            this.panel15.SuspendLayout();
             this.panelBtnMapeo.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panelBtnCarros.SuspendLayout();
@@ -210,6 +206,8 @@
             this.panelBtnCaptura.SuspendLayout();
             this.panelBtnCap.SuspendLayout();
             this.panelReportes.SuspendLayout();
+            this.panelBtnProyeccion.SuspendLayout();
+            this.panel39.SuspendLayout();
             this.panelRDE.SuspendLayout();
             this.panel32.SuspendLayout();
             this.panelCI.SuspendLayout();
@@ -230,6 +228,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panelActualizaciones.SuspendLayout();
+            this.panel35.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvActualizaciones)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panelAlmacenes.SuspendLayout();
@@ -247,8 +246,6 @@
             this.panelAll.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvT5)).BeginInit();
-            this.panelBtnProyeccion.SuspendLayout();
-            this.panel39.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelBarraTitulo
@@ -340,7 +337,7 @@
             this.panelBtnConfiguracion.Controls.Add(this.panelBtnConfig);
             this.panelBtnConfiguracion.Controls.Add(this.panel22);
             this.panelBtnConfiguracion.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnConfiguracion.Location = new System.Drawing.Point(0, 978);
+            this.panelBtnConfiguracion.Location = new System.Drawing.Point(0, 937);
             this.panelBtnConfiguracion.Name = "panelBtnConfiguracion";
             this.panelBtnConfiguracion.Size = new System.Drawing.Size(231, 45);
             this.panelBtnConfiguracion.TabIndex = 18;
@@ -394,7 +391,7 @@
             this.panelBtnCorteManual.Controls.Add(this.button4);
             this.panelBtnCorteManual.Controls.Add(this.panel5);
             this.panelBtnCorteManual.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnCorteManual.Location = new System.Drawing.Point(0, 933);
+            this.panelBtnCorteManual.Location = new System.Drawing.Point(0, 892);
             this.panelBtnCorteManual.Name = "panelBtnCorteManual";
             this.panelBtnCorteManual.Size = new System.Drawing.Size(231, 45);
             this.panelBtnCorteManual.TabIndex = 17;
@@ -432,7 +429,6 @@
             this.panelProgramas.Controls.Add(this.panelBtnVtaRacion);
             this.panelProgramas.Controls.Add(this.panel1BtnAgrupar);
             this.panelProgramas.Controls.Add(this.panelBtnInventario);
-            this.panelProgramas.Controls.Add(this.panelBtnExtraer);
             this.panelProgramas.Controls.Add(this.panelBtnMapeo);
             this.panelProgramas.Controls.Add(this.panelBtnCarros);
             this.panelProgramas.Controls.Add(this.panelBtnExportar);
@@ -440,7 +436,7 @@
             this.panelProgramas.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelProgramas.Location = new System.Drawing.Point(0, 611);
             this.panelProgramas.Name = "panelProgramas";
-            this.panelProgramas.Size = new System.Drawing.Size(231, 322);
+            this.panelProgramas.Size = new System.Drawing.Size(231, 281);
             this.panelProgramas.TabIndex = 16;
             this.panelProgramas.Visible = false;
             // 
@@ -449,7 +445,7 @@
             this.panelBtnVtaRacion.Controls.Add(this.button10);
             this.panelBtnVtaRacion.Controls.Add(this.panel36);
             this.panelBtnVtaRacion.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnVtaRacion.Location = new System.Drawing.Point(0, 280);
+            this.panelBtnVtaRacion.Location = new System.Drawing.Point(0, 240);
             this.panelBtnVtaRacion.Name = "panelBtnVtaRacion";
             this.panelBtnVtaRacion.Size = new System.Drawing.Size(231, 40);
             this.panelBtnVtaRacion.TabIndex = 1;
@@ -484,7 +480,7 @@
             this.panel1BtnAgrupar.Controls.Add(this.panel17);
             this.panel1BtnAgrupar.Controls.Add(this.panel18);
             this.panel1BtnAgrupar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1BtnAgrupar.Location = new System.Drawing.Point(0, 240);
+            this.panel1BtnAgrupar.Location = new System.Drawing.Point(0, 200);
             this.panel1BtnAgrupar.Name = "panel1BtnAgrupar";
             this.panel1BtnAgrupar.Size = new System.Drawing.Size(231, 40);
             this.panel1BtnAgrupar.TabIndex = 10;
@@ -511,7 +507,7 @@
             this.button19.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button19.Location = new System.Drawing.Point(0, 0);
             this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(211, 35);
+            this.button19.Size = new System.Drawing.Size(211, 40);
             this.button19.TabIndex = 6;
             this.button19.Text = "Agrupar Inventarios";
             this.button19.UseVisualStyleBackColor = false;
@@ -531,7 +527,7 @@
             this.panelBtnInventario.Controls.Add(this.panel16);
             this.panelBtnInventario.Controls.Add(this.panel7);
             this.panelBtnInventario.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnInventario.Location = new System.Drawing.Point(0, 200);
+            this.panelBtnInventario.Location = new System.Drawing.Point(0, 160);
             this.panelBtnInventario.Name = "panelBtnInventario";
             this.panelBtnInventario.Size = new System.Drawing.Size(231, 40);
             this.panelBtnInventario.TabIndex = 9;
@@ -558,7 +554,7 @@
             this.button18.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button18.Location = new System.Drawing.Point(0, 0);
             this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(211, 35);
+            this.button18.Size = new System.Drawing.Size(211, 40);
             this.button18.TabIndex = 5;
             this.button18.Text = "Inventario / Tracker";
             this.button18.UseVisualStyleBackColor = false;
@@ -572,53 +568,6 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(20, 40);
             this.panel7.TabIndex = 0;
-            // 
-            // panelBtnExtraer
-            // 
-            this.panelBtnExtraer.Controls.Add(this.panel15);
-            this.panelBtnExtraer.Controls.Add(this.panel14);
-            this.panelBtnExtraer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnExtraer.Location = new System.Drawing.Point(0, 160);
-            this.panelBtnExtraer.Name = "panelBtnExtraer";
-            this.panelBtnExtraer.Size = new System.Drawing.Size(231, 40);
-            this.panelBtnExtraer.TabIndex = 8;
-            // 
-            // panel15
-            // 
-            this.panel15.Controls.Add(this.button17);
-            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel15.Location = new System.Drawing.Point(20, 0);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(211, 40);
-            this.panel15.TabIndex = 1;
-            // 
-            // button17
-            // 
-            this.button17.BackColor = System.Drawing.Color.White;
-            this.button17.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button17.FlatAppearance.BorderSize = 0;
-            this.button17.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.button17.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.button17.ForeColor = System.Drawing.Color.Black;
-            this.button17.Image = global::Alimentacion.Properties.Resources.extract;
-            this.button17.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button17.Location = new System.Drawing.Point(0, 0);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(211, 35);
-            this.button17.TabIndex = 4;
-            this.button17.Text = "Extraer Informacion Tracker";
-            this.button17.UseVisualStyleBackColor = false;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
-            // 
-            // panel14
-            // 
-            this.panel14.BackColor = System.Drawing.Color.White;
-            this.panel14.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel14.Location = new System.Drawing.Point(0, 0);
-            this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(20, 40);
-            this.panel14.TabIndex = 0;
             // 
             // panelBtnMapeo
             // 
@@ -652,7 +601,7 @@
             this.button16.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button16.Location = new System.Drawing.Point(0, 0);
             this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(211, 35);
+            this.button16.Size = new System.Drawing.Size(211, 40);
             this.button16.TabIndex = 3;
             this.button16.Text = "Mapeo";
             this.button16.UseVisualStyleBackColor = false;
@@ -699,7 +648,7 @@
             this.button15.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button15.Location = new System.Drawing.Point(0, 0);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(211, 35);
+            this.button15.Size = new System.Drawing.Size(211, 40);
             this.button15.TabIndex = 2;
             this.button15.Text = "Agregar Carros";
             this.button15.UseVisualStyleBackColor = false;
@@ -746,7 +695,7 @@
             this.button14.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button14.Location = new System.Drawing.Point(0, 0);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(211, 35);
+            this.button14.Size = new System.Drawing.Size(211, 40);
             this.button14.TabIndex = 1;
             this.button14.Text = "Exportar/ Enviar Prorrateo";
             this.button14.UseVisualStyleBackColor = false;
@@ -1066,6 +1015,53 @@
             this.panelReportes.Name = "panelReportes";
             this.panelReportes.Size = new System.Drawing.Size(231, 204);
             this.panelReportes.TabIndex = 12;
+            // 
+            // panelBtnProyeccion
+            // 
+            this.panelBtnProyeccion.Controls.Add(this.panel39);
+            this.panelBtnProyeccion.Controls.Add(this.panel43);
+            this.panelBtnProyeccion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelBtnProyeccion.Location = new System.Drawing.Point(0, 160);
+            this.panelBtnProyeccion.Name = "panelBtnProyeccion";
+            this.panelBtnProyeccion.Size = new System.Drawing.Size(231, 40);
+            this.panelBtnProyeccion.TabIndex = 7;
+            // 
+            // panel39
+            // 
+            this.panel39.Controls.Add(this.btnProyeccion);
+            this.panel39.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel39.Location = new System.Drawing.Point(20, 0);
+            this.panel39.Name = "panel39";
+            this.panel39.Size = new System.Drawing.Size(211, 40);
+            this.panel39.TabIndex = 1;
+            // 
+            // btnProyeccion
+            // 
+            this.btnProyeccion.BackColor = System.Drawing.Color.White;
+            this.btnProyeccion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnProyeccion.FlatAppearance.BorderSize = 0;
+            this.btnProyeccion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.btnProyeccion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProyeccion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnProyeccion.ForeColor = System.Drawing.Color.Black;
+            this.btnProyeccion.Image = global::Alimentacion.Properties.Resources.Reporte;
+            this.btnProyeccion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnProyeccion.Location = new System.Drawing.Point(0, 0);
+            this.btnProyeccion.Name = "btnProyeccion";
+            this.btnProyeccion.Size = new System.Drawing.Size(211, 40);
+            this.btnProyeccion.TabIndex = 3;
+            this.btnProyeccion.Text = "Proyección";
+            this.btnProyeccion.UseVisualStyleBackColor = false;
+            this.btnProyeccion.Click += new System.EventHandler(this.btnProyeccion_Click);
+            // 
+            // panel43
+            // 
+            this.panel43.BackColor = System.Drawing.Color.White;
+            this.panel43.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel43.Location = new System.Drawing.Point(0, 0);
+            this.panel43.Name = "panel43";
+            this.panel43.Size = new System.Drawing.Size(20, 40);
+            this.panel43.TabIndex = 0;
             // 
             // panelRDE
             // 
@@ -1411,12 +1407,42 @@
             // 
             // panelActualizaciones
             // 
+            this.panelActualizaciones.Controls.Add(this.panel35);
             this.panelActualizaciones.Controls.Add(this.dgvActualizaciones);
             this.panelActualizaciones.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelActualizaciones.Location = new System.Drawing.Point(3, 3);
             this.panelActualizaciones.Name = "panelActualizaciones";
             this.panelActualizaciones.Size = new System.Drawing.Size(694, 373);
             this.panelActualizaciones.TabIndex = 1;
+            this.panelActualizaciones.Paint += new System.Windows.Forms.PaintEventHandler(this.panelActualizaciones_Paint);
+            // 
+            // panel35
+            // 
+            this.panel35.Controls.Add(this.button21);
+            this.panel35.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel35.Location = new System.Drawing.Point(484, 0);
+            this.panel35.Name = "panel35";
+            this.panel35.Size = new System.Drawing.Size(210, 373);
+            this.panel35.TabIndex = 1;
+            // 
+            // button21
+            // 
+            this.button21.BackColor = System.Drawing.Color.White;
+            this.button21.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button21.FlatAppearance.BorderSize = 0;
+            this.button21.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
+            this.button21.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.button21.ForeColor = System.Drawing.Color.Black;
+            this.button21.Image = global::Alimentacion.Properties.Resources.updated;
+            this.button21.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button21.Location = new System.Drawing.Point(0, 0);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(210, 43);
+            this.button21.TabIndex = 5;
+            this.button21.Text = "Actualizar Informacion";
+            this.button21.UseVisualStyleBackColor = false;
+            this.button21.Click += new System.EventHandler(this.button21_Click_1);
             // 
             // dgvActualizaciones
             // 
@@ -1427,13 +1453,13 @@
             this.dgvActualizaciones.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvActualizaciones.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvActualizaciones.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvActualizaciones.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvActualizaciones.Dock = System.Windows.Forms.DockStyle.Left;
             this.dgvActualizaciones.Location = new System.Drawing.Point(0, 0);
             this.dgvActualizaciones.MultiSelect = false;
             this.dgvActualizaciones.Name = "dgvActualizaciones";
             this.dgvActualizaciones.ReadOnly = true;
             this.dgvActualizaciones.RowHeadersVisible = false;
-            this.dgvActualizaciones.Size = new System.Drawing.Size(694, 373);
+            this.dgvActualizaciones.Size = new System.Drawing.Size(467, 373);
             this.dgvActualizaciones.TabIndex = 0;
             // 
             // tabPage2
@@ -1816,53 +1842,6 @@
             this.dgvT5.Size = new System.Drawing.Size(344, 243);
             this.dgvT5.TabIndex = 0;
             // 
-            // panelBtnProyeccion
-            // 
-            this.panelBtnProyeccion.Controls.Add(this.panel39);
-            this.panelBtnProyeccion.Controls.Add(this.panel43);
-            this.panelBtnProyeccion.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelBtnProyeccion.Location = new System.Drawing.Point(0, 160);
-            this.panelBtnProyeccion.Name = "panelBtnProyeccion";
-            this.panelBtnProyeccion.Size = new System.Drawing.Size(231, 40);
-            this.panelBtnProyeccion.TabIndex = 7;
-            // 
-            // panel39
-            // 
-            this.panel39.Controls.Add(this.btnProyeccion);
-            this.panel39.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel39.Location = new System.Drawing.Point(20, 0);
-            this.panel39.Name = "panel39";
-            this.panel39.Size = new System.Drawing.Size(211, 40);
-            this.panel39.TabIndex = 1;
-            // 
-            // btnProyeccion
-            // 
-            this.btnProyeccion.BackColor = System.Drawing.Color.White;
-            this.btnProyeccion.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnProyeccion.FlatAppearance.BorderSize = 0;
-            this.btnProyeccion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver;
-            this.btnProyeccion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnProyeccion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnProyeccion.ForeColor = System.Drawing.Color.Black;
-            this.btnProyeccion.Image = global::Alimentacion.Properties.Resources.Reporte;
-            this.btnProyeccion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnProyeccion.Location = new System.Drawing.Point(0, 0);
-            this.btnProyeccion.Name = "btnProyeccion";
-            this.btnProyeccion.Size = new System.Drawing.Size(211, 40);
-            this.btnProyeccion.TabIndex = 3;
-            this.btnProyeccion.Text = "Proyección";
-            this.btnProyeccion.UseVisualStyleBackColor = false;
-            this.btnProyeccion.Click += new System.EventHandler(this.btnProyeccion_Click);
-            // 
-            // panel43
-            // 
-            this.panel43.BackColor = System.Drawing.Color.White;
-            this.panel43.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel43.Location = new System.Drawing.Point(0, 0);
-            this.panel43.Name = "panel43";
-            this.panel43.Size = new System.Drawing.Size(20, 40);
-            this.panel43.TabIndex = 0;
-            // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1895,8 +1874,6 @@
             this.panel17.ResumeLayout(false);
             this.panelBtnInventario.ResumeLayout(false);
             this.panel16.ResumeLayout(false);
-            this.panelBtnExtraer.ResumeLayout(false);
-            this.panel15.ResumeLayout(false);
             this.panelBtnMapeo.ResumeLayout(false);
             this.panel13.ResumeLayout(false);
             this.panelBtnCarros.ResumeLayout(false);
@@ -1917,6 +1894,8 @@
             this.panelBtnCaptura.ResumeLayout(false);
             this.panelBtnCap.ResumeLayout(false);
             this.panelReportes.ResumeLayout(false);
+            this.panelBtnProyeccion.ResumeLayout(false);
+            this.panel39.ResumeLayout(false);
             this.panelRDE.ResumeLayout(false);
             this.panel32.ResumeLayout(false);
             this.panelCI.ResumeLayout(false);
@@ -1937,6 +1916,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panelActualizaciones.ResumeLayout(false);
+            this.panel35.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvActualizaciones)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.panelAlmacenes.ResumeLayout(false);
@@ -1956,8 +1936,6 @@
             this.panelAll.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvT5)).EndInit();
-            this.panelBtnProyeccion.ResumeLayout(false);
-            this.panel39.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1976,7 +1954,6 @@
         private System.Windows.Forms.Panel panelProgramas;
         private System.Windows.Forms.Button button19;
         private System.Windows.Forms.Button button18;
-        private System.Windows.Forms.Button button17;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button14;
@@ -2010,9 +1987,6 @@
         private System.Windows.Forms.Panel panelBtnInventario;
         private System.Windows.Forms.Panel panel16;
         private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Panel panelBtnExtraer;
-        private System.Windows.Forms.Panel panel15;
-        private System.Windows.Forms.Panel panel14;
         private System.Windows.Forms.Panel panelBtnMapeo;
         private System.Windows.Forms.Panel panel13;
         private System.Windows.Forms.Panel panel12;
@@ -2101,5 +2075,7 @@
         private System.Windows.Forms.Panel panel39;
         private System.Windows.Forms.Button btnProyeccion;
         private System.Windows.Forms.Panel panel43;
+        private System.Windows.Forms.Panel panel35;
+        private System.Windows.Forms.Button button21;
     }
 }

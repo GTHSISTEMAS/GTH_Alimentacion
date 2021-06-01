@@ -42,7 +42,7 @@ namespace Alimentacion
         string ranchosId;
         int rep;
         int prorrateo;
-        int conBasc;
+        public int conBasc;
         bool hb;
         bool existeProrrateo;
         double consumoAlas;
@@ -321,7 +321,7 @@ namespace Alimentacion
             }
         }
 
-        private void ColumnasForaje(out DataTable dt)
+        public void ColumnasForaje(out DataTable dt)
         {
             dt = new DataTable();
             if (conBasc == 3)
@@ -1030,7 +1030,7 @@ namespace Alimentacion
                 DataTable dt, dtAux;
                 DataTable dt1 = new DataTable();
                 string pmz, clave, ingrediente, valores = "", prmz, query;
-                double porcentaje;
+                double porcentaje, porcentajeseca;
                 prmz = premezcla[2].ToString() + premezcla[3];
                 query = "SELECT * FROM porcentaje_Premezcla WHERE pmez_descripcion like '" + premezcla + "'";
                 conn.QueryAlimento(query, out dtAux);
@@ -1039,22 +1039,63 @@ namespace Alimentacion
                 {
                     if (prmz == "01")
                     {
-                        query = "SELECT T1.Pmz, T1.Clave, T1.Ing, T1.Peso / T2.Total "
-                        + " FROM( "
-                        + " select T.pmez_racion AS Pmz, T.ing_clave AS Clave, T.ing_nombre AS Ing, SUM(T.pmez_peso) AS Peso "
-                        + " FROM( "
-                        + " SELECT DISTINCT * "
-                        + " from premezcla "
-                        + " where pmez_racion LIKE '" + premezcla + "' "
-                        + " AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "') T "
-                        + " GROUP BY pmez_racion, ing_clave, ing_nombre ) T1 "
-                        + " LEFT JOIN( "
-                        + " SELECT T.pmez_racion AS Pmz, SUM(T.pmez_peso) AS Total "
-                        + " FROM( "
-                        + " SELECT DISTINCT * FROM premezcla "
-                        + " WHERE pmez_racion LIKE '" + premezcla + "' "
-                        + " AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "') T "
-                        + " GROUP BY T.pmez_racion) T2 ON T1.Pmz = T2.Pmz";
+                        query = @"SELECT
+	                                   T1.Pmz
+                                      ,T1.Clave
+                                      ,T1.Ing
+	                                  ,T1.Peso / T2.Total
+	                                  ,SEC2.Peso / SEC.Peso
+                                FROM 
+                                (
+	                                SELECT  T.pmez_racion    AS Pmz
+	                                       ,T.ing_clave      AS Clave
+	                                       ,T.ing_nombre     AS Ing
+	                                       ,SUM(T.pmez_peso) AS Peso
+	                                FROM 
+	                                (
+		                                SELECT  DISTINCT *
+		                                FROM premezcla
+		                                WHERE pmez_racion  LIKE '" + premezcla + @"'
+                                        AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+                                        AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+	                                ) T
+	                                GROUP BY  pmez_racion
+	                                         ,ing_clave
+	                                         ,ing_nombre 
+                                ) T1
+                                LEFT JOIN 
+                                (
+	                                SELECT  T.pmez_racion    AS Pmz
+	                                       ,SUM(T.pmez_peso) AS Total
+	                                FROM 
+	                                (
+		                                SELECT  DISTINCT *
+		                                FROM premezcla
+		                                WHERE pmez_racion  LIKE '" + premezcla + @"'
+                                        AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+                                        AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+	                                ) T
+		                                GROUP BY  T.pmez_racion
+                                )       T2 ON T1.Pmz = T2.Pmz
+                                LEFT JOIN( 
+		                                SELECT rac_descripcion AS Pmez, SUM(rac_ms) AS Peso 
+		                                FROM racion 
+		                                WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                AND rac_fecha  < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                AND rac_descripcion LIKE '" + premezcla + @"' 
+		                                GROUP BY rac_descripcion
+                                )
+		                                SEC ON SEC.Pmez = T1.Pmz
+                                LEFT JOIN( 
+		                                SELECT rac_descripcion AS Pmez, ing_clave AS Clave, SUM(rac_ms) AS Peso 
+			                                FROM racion 
+			                                WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                    AND rac_fecha  < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+		                                    AND rac_descripcion LIKE '" + premezcla + @"' 
+		                                GROUP BY rac_descripcion, ing_clave
+                                )
+                                SEC2 ON SEC2.Clave = T1.Clave";
+
                         conn.QueryAlimento(query, out dt);
 
                         for (int i = 0; i < dt.Rows.Count; i++)
@@ -1063,7 +1104,8 @@ namespace Alimentacion
                             clave = dt.Rows[i][1].ToString();
                             ingrediente = dt.Rows[i][2].ToString();
                             porcentaje = Convert.ToDouble(dt.Rows[i][3]);
-                            valores += "('" + pmz + "','" + clave + "','" + ingrediente + "'," + porcentaje + "),";
+                            porcentajeseca = Convert.ToDouble(dt.Rows[i][4]);
+                            valores += "('" + pmz + "','" + clave + "','" + ingrediente + "'," + porcentaje + "," + porcentajeseca + "),";
                         }
                         if (valores.Length > 0)
                         {
@@ -1166,21 +1208,23 @@ namespace Alimentacion
                                 SupraMezcla(dtsPM.Rows[i][0].ToString(), fpmI, fin);
                             }
 
+
                             query = "INSERT INTO porcentaje_Premezcla "
-                               + " SELECT T1.Pmez, T1.Clave, T1.Ing, T1.Peso / T2.Peso "
+                               + " SELECT T1.Pmez, T1.Clave, T1.Ing, T1.Peso / T2.Peso , T1.PesoSeco / T2.PesoSeco "
                                 + " FROM( "
-                                + " SELECT rac_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, SUM(rac_mh) AS Peso "
+                                + " SELECT rac_descripcion AS Pmez, ing_clave AS Clave, ing_descripcion AS Ing, SUM(rac_mh) AS Peso , SUM(rac_ms) AS PesoSeco "
                                 + " FROM racion "
                                 + " WHERE rac_fecha >= '" + fpmI.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
                                 + " AND rac_descripcion LIKE '" + premezcla + "' "
                                 + " GROUP BY rac_descripcion, ing_clave, ing_descripcion)T1 "
                                 + " LEFT JOIN( "
-                                + " SELECT rac_descripcion AS Pmez, SUM(rac_mh) AS Peso "
+                                + " SELECT rac_descripcion AS Pmez, SUM(rac_mh) AS Peso , SUM(rac_ms) AS PesoSeco"
                                 + " FROM racion "
                                 + " WHERE rac_fecha >= '" + fpmI.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
                                 + " AND rac_descripcion LIKE '" + premezcla + "' "
-                                + " GROUP BY rac_descripcion "
-                                + " ) T2 ON T1.Pmez = T2.Pmez ";
+                                + " GROUP BY rac_descripcion"
+                                + " ) T2 ON T1.Pmez = T2.Pmez";
+
                             conn.InsertSelecttAlimento(query);
                         }
                     }
@@ -1230,19 +1274,49 @@ namespace Alimentacion
                     fini = inicio;
 
                 query = "INSERT INTO porcentaje_Premezcla "
-                    + " SELECT T1.Pmz, T1.Clave, T1.Ing, (T1.Peso / T2.Peso) "
-                    + " FROM( "
-                    + " SELECT rac_descripcion AS Pmz, ing_clave AS Clave, ing_descripcion AS Ing, SUM(rac_mh) AS Peso "
-                    + " FROM racion "
-                    + " WHERE rac_descripcion like '" + premezcla + "' "
-                    + " AND rac_fecha BETWEEN '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
-                    + " GROUP BY rac_descripcion, ing_clave, ing_descripcion) T1 "
-                    + " LEFT JOIN( "
-                    + " SELECT rac_descripcion AS Pmz, SUM(rac_mh) AS Peso "
-                    + " FROM racion "
-                    + " WHERE rac_descripcion like '" + premezcla + "' "
-                    + " AND rac_fecha BETWEEN '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
-                    + " GROUP BY rac_descripcion )T2 ON  T1.Pmz = T2.Pmz";
+                 + " SELECT T1.Pmz, T1.Clave, T1.Ing, (T1.Peso / T2.Peso) , SEC2.Peso / SEC.Peso "
+                 + " FROM( "
+                 + " SELECT pmez_racion AS Pmz, ing_clave AS Clave, ing_nombre AS Ing, SUM(pmez_peso) AS Peso "
+                 + " FROM premezcla "
+                 + " WHERE pmez_racion LIKE '" + premezcla + "' AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                 + " GROUP BY pmez_racion, ing_clave, ing_nombre) T1 "
+                 + " LEFT JOIN( "
+                 + " SELECT pmez_racion AS Pmz, SUM(pmez_peso) AS Peso "
+                 + " FROM premezcla "
+                 + " WHERE pmez_racion LIKE '" + premezcla + "' AND pmez_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND pmez_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                 + " GROUP BY pmez_racion )T2 ON T1.Pmz = T2.Pmz" + @"
+                    LEFT JOIN(
+                                        SELECT rac_descripcion AS Pmez, SUM(rac_ms) AS Peso
+
+                                        FROM racion
+
+                                        WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                        AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                        AND rac_descripcion LIKE '" + premezcla + @"'
+
+                                        GROUP BY rac_descripcion
+                                )
+
+                                        SEC ON SEC.Pmez = T1.Pmz
+                                LEFT JOIN(
+                                        SELECT rac_descripcion AS Pmez, ing_clave AS Clave, SUM(rac_ms) AS Peso
+                                            FROM racion
+                                            WHERE rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                            AND rac_fecha< '" + fin.ToString("yyyy-MM-dd HH:mm") + @"'
+
+                                            AND rac_descripcion LIKE '" + premezcla + @"'
+
+                                        GROUP BY rac_descripcion, ing_clave
+                                )
+                                SEC2 ON SEC2.Clave = T1.Clave";
+
+
+
+
+
                 conn.InsertSelecttAlimento(query);
             }
         }
@@ -1382,7 +1456,7 @@ namespace Alimentacion
             conn.QuerySIO(qry, out dtC);
             conBasc = Convert.ToInt32(dtC.Rows[0][0]);
         }
-
+        CheckTipificaciones checkTipificaciones;
         private void Prorrateo_Load(object sender, EventArgs e)
         {
             panel1Autorizar.Visible = false;
@@ -1469,6 +1543,58 @@ namespace Alimentacion
             load = false;
             label13.Text = almCerrados ? "ALMACENES CERRRADOS" : "ALMACENES ABIERTOS";
             label13.ForeColor = almCerrados ? Color.Green : Color.Red;
+
+            DateTime dateTime = DateTime.Now;
+            DateTime dateTimeInicio = dateTime.AddDays(-(dateTime.Day));
+            DataTable dtRaciones, dtIng;
+            
+            RacionMalTipificada(dateTimeInicio, dateTime, out dtRaciones);
+            IngredienteMalTipíficado(ran_id.ToString(), dateTimeInicio, dateTime, out dtIng);
+
+            DataTable dtALAS, dtALFO;
+            ColumnasAlimento(out dtALAS);
+            ColumnasForaje(out dtALFO);
+
+            if (dtRaciones.Rows.Count > 0 || dtIng.Rows.Count > 0)
+            {
+
+
+                checkTipificaciones = new CheckTipificaciones(ranchosId, emp_id, dateTimeInicio, dateTime, dtALAS, dtALFO, conBasc);
+                if (checkTipificaciones.ShowDialog() == DialogResult.OK)
+                {
+                    if(checkTipificaciones.Vpwd == false)
+                    {
+                        Console.WriteLine("No entrar a prorrateo");
+                        this.Close();
+                    } else
+                    {
+
+                    }
+
+                }
+            }
+
+
+        }
+
+        public void RacionMalTipificada(DateTime inicio, DateTime fin, out DataTable dt)
+        {
+            string query = "SELECT rac_descripcion AS Racion"
+                        + " FROM racion "
+                        + " WHERE ran_id = 0 AND rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha < '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                        + " GROUP BY rac_descripcion";
+            conn.QueryAlimento(query, out dt);
+        }
+
+        public void IngredienteMalTipíficado(string ranId, DateTime inicio, DateTime fin, out DataTable dt)
+        {
+            string query = "select DISTINCT ing_descripcion AS Ingrediente"
+                        + " from racion "
+                        + " where ran_id IN(" + ranId + ") AND rac_fecha >= '" + inicio.ToString("yyyy-MM-dd HH:mm") + "' AND rac_fecha< '" + fin.ToString("yyyy-MM-dd HH:mm") + "' "
+                        + " AND SUBSTRING(ing_clave, 1,4) NOT IN('ALAS', 'ALFO') AND ing_descripcion not IN('AGUA', 'WATER') "
+                        + " AND(ISNUMERIC(SUBSTRING(ing_descripcion, 1, 1)) > 0 AND SUBSTRING(ing_descripcion, 3, 2) not IN('00', '01', '02', '90')) "
+                        + " AND(SUBSTRING(ing_descripcion, 1, 1) NOT IN('1', '2', '3', '4')  AND ing_descripcion like '%SOB%')";
+            conn.QueryAlimento(query, out dt);
         }
 
         private void Porcentajes()
@@ -1789,6 +1915,15 @@ namespace Alimentacion
         }
 
         private bool ExisteProrrateo()
+        {
+            DataTable dt;
+            string query = "Select * From prorrateo WHERE pro_fecha_reg = '" + fecha_reg.ToString("yyyy-MM-dd") + "' AND ran_id = " + ran_id;
+            conn.QueryAlimento(query, out dt);
+
+            return dt.Rows.Count > 0;
+        }
+
+        private bool ExisteMalTipificacion()
         {
             DataTable dt;
             string query = "Select * From prorrateo WHERE pro_fecha_reg = '" + fecha_reg.ToString("yyyy-MM-dd") + "' AND ran_id = " + ran_id;
@@ -3659,7 +3794,7 @@ namespace Alimentacion
             return ranchos.Length > 0 ? ranchos.Substring(0, ranchos.Length - 1) : ran_id.ToString();
         }
 
-        private void ColumnasAlimento(out DataTable dt)
+        public void ColumnasAlimento(out DataTable dt)
         {
             dt = new DataTable();
             dt.Columns.Add("FECHA").DataType = System.Type.GetType("System.String");
